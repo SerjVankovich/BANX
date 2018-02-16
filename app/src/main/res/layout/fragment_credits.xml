@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.cooltechworks.views.shimmer.ShimmerRecyclerView
+        android:id="@+id/this_res_view"
+        android:scrollbars="vertical"
+        android:scrollbarStyle="outsideOverlay"
+        style="@style/scrollbar_style"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

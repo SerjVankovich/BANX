@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "935464864868",
+    "firebase_url": "https://banx-a1b2d.firebaseio.com",
+    "project_id": "banx-a1b2d",
+    "storage_bucket": "banx-a1b2d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:935464864868:android:cd9674f6e2453740",
+        "android_client_info": {
+          "package_name": "com.example.sergey.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "935464864868-2oqms9ct09qes3ronqq66jenjq0pchec.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sergey.myapplication",
+            "certificate_hash": "ccce4171e1c4fc457bd9dd1733ff5a5d87ac6d72"
+          }
+        },
+        {
+          "client_id": "935464864868-h4jvp49spnuhuibqae3tjd3magmcukp1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnANPzfBc14bSPGCDL2cvnQD_GyuosrXQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "935464864868-h4jvp49spnuhuibqae3tjd3magmcukp1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

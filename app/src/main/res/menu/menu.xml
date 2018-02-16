@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:tool="http://schemas.android.com/apk/res-auto"
+    >
+
+    <group android:checkableBehavior="single">
+            <item
+                android:id="@+id/vklads"
+                android:title="Вклады"
+                android:icon="@drawable/ic_launcher_background"
+                tools:ignore="HardcodedText" />
+            <item
+                android:id="@+id/kredits"
+                android:title="Кредиты"
+                android:icon="@mipmap/ic_launcher"/>
+        <item
+            android:id="@+id/banks"
+            android:title="Банки"
+            android:icon="@mipmap/icon_launcher"/>
+
+        <item
+            android:id="@+id/valutes"
+            android:icon="@drawable/icon_vector"
+            android:title="Конвертер валют"
+            tools:ignore="HardcodedText" />
+
+            <item android:title="Собственное">
+                <menu>
+                    <item
+                        android:id="@+id/my_deposits"
+                        android:title="Мои вклады"
+                        android:icon="@mipmap/icon_launcher"/>
+                    <item
+                        android:id="@+id/my_kredit"
+                        android:icon="@mipmap/ic_launcher"
+                        android:title="Мои кредиты" />
+                </menu>
+            </item>
+    </group>
+</menu>
