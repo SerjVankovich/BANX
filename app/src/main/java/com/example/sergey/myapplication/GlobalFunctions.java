@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.cooltechworks.views.shimmer.ShimmerRecyclerView;
 import com.example.sergey.myapplication.DataBase.DBCard;
+import com.example.sergey.myapplication.adapters.ResAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.GenericTypeIndicator;
 
@@ -17,7 +18,8 @@ import java.util.Map;
  */
 
 public class GlobalFunctions {
-    public static void getData(DataSnapshot dataSnapshot, ShimmerRecyclerView recyclerView, List<DBCard> main_array){
+    public static void getData(DataSnapshot dataSnapshot, ShimmerRecyclerView recyclerView,
+                               List<DBCard> main_array){
         recyclerView.showShimmerAdapter();
         // This method is called once with the initial value and again
         // whenever data at this location is updated.
@@ -99,5 +101,16 @@ public class GlobalFunctions {
             }
 
         }
+    }
+    public static void loadMore(List<DBCard> main_array, List<DBCard> showArray, ResAdapter adapter, int beginSlice, int endSlice){
+
+        for (int i = beginSlice; i < endSlice; i++) {
+            showArray.add(main_array.get(i));
+            adapter.notifyItemInserted(i);
+
+        }
+        adapter.notifyDataSetChanged();
+
+
     }
 }

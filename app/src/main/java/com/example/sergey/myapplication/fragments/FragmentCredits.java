@@ -15,6 +15,7 @@ import com.cooltechworks.views.shimmer.ShimmerRecyclerView;
 import com.example.sergey.myapplication.DataBase.DBCard;
 import com.example.sergey.myapplication.GlobalFunctions;
 import com.example.sergey.myapplication.R;
+import com.example.sergey.myapplication.adapters.MyScrollListener;
 import com.example.sergey.myapplication.adapters.ResAdapter;
 import com.example.sergey.myapplication.comparaters.PercentsCreditsComparator;
 import com.google.firebase.database.DataSnapshot;
@@ -41,6 +42,7 @@ public class FragmentCredits extends Fragment {
     PercentsCreditsComparator comparator;
     @Nullable
     @Override
+
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_credits, container, false);
 
@@ -76,7 +78,7 @@ public class FragmentCredits extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 GlobalFunctions.getData(dataSnapshot, recyclerView, main_array);
-                updateUI();
+                updateUI(dataSnapshot);
 
 
             }
@@ -90,11 +92,17 @@ public class FragmentCredits extends Fragment {
 
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void updateUI(){
+    public void updateUI(DataSnapshot snapshot){
         comparator = new PercentsCreditsComparator();
         Collections.sort(main_array, comparator);
-        adapter = new ResAdapter(getContext(), main_array);
+        List<DBCard> showArray = new ArrayList<>();
+        adapter = new ResAdapter(getContext(), showArray);
+        GlobalFunctions.loadMore(main_array, showArray, adapter, 0, 15);
+
         recyclerView.setAdapter(adapter);
+        recyclerView.addOnScrollListener(new MyScrollListener(recyclerView, main_array, adapter, showArray));
+
         recyclerView.hideShimmerAdapter();
     }
+
 }

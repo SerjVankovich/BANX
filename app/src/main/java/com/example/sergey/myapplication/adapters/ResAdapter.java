@@ -19,6 +19,7 @@ import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.example.sergey.myapplication.DataBase.DBCard;
 import com.example.sergey.myapplication.DataBase.DataBaseHelper;
+import com.example.sergey.myapplication.MainActivity;
 import com.example.sergey.myapplication.R;
 
 import com.google.firebase.database.DataSnapshot;
@@ -46,7 +47,6 @@ public class ResAdapter extends RecyclerView.Adapter<ResAdapter.ViewHolder> {
         this.context = context;
         this.main_array = main_array;
         vhelper = new ViewBinderHelper();
-
 
     }
 

@@ -17,6 +17,7 @@ import com.cooltechworks.views.shimmer.ShimmerRecyclerView;
 import com.example.sergey.myapplication.DataBase.DBCard;
 import com.example.sergey.myapplication.GlobalFunctions;
 import com.example.sergey.myapplication.R;
+import com.example.sergey.myapplication.adapters.MyScrollListener;
 import com.example.sergey.myapplication.adapters.ResAdapter;
 import com.example.sergey.myapplication.comparaters.PercentVkladsCompatrator;
 import com.google.firebase.database.DataSnapshot;
@@ -43,6 +44,8 @@ public class FragmentVklads extends Fragment {
     List<DBCard> main_array;
     Toolbar toolbar;
     PercentVkladsCompatrator compatrator;
+    int beginSlice = 0;
+    int endSlice = 15;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -75,7 +78,7 @@ public class FragmentVklads extends Fragment {
     }
     public void getMain_array (){
         main_array = new ArrayList<>();
-        DatabaseReference myBase = FirebaseDatabase.getInstance().getReference();
+        final DatabaseReference myBase = FirebaseDatabase.getInstance().getReference();
 
 
 
@@ -85,7 +88,7 @@ public class FragmentVklads extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 GlobalFunctions.getData(dataSnapshot, recyclerView, main_array);
-                updateUI();
+                updateUI(dataSnapshot);
 
 
             }
@@ -99,14 +102,17 @@ public class FragmentVklads extends Fragment {
 
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void updateUI(){
+    public void updateUI(DataSnapshot snapshot){
         compatrator = new PercentVkladsCompatrator();
         Collections.sort(main_array, compatrator);
-        adapter = new ResAdapter(getContext(), main_array);
+        List<DBCard> showArray = new ArrayList<>();
+
+        adapter = new ResAdapter(getContext(), showArray);
+        GlobalFunctions.loadMore(main_array, showArray, adapter, 0, 15);
+
         recyclerView.setAdapter(adapter);
+        recyclerView.addOnScrollListener(new MyScrollListener(recyclerView, main_array, adapter, showArray));
         recyclerView.hideShimmerAdapter();
     }
-
-
 
 }
