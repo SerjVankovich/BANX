@@ -12,6 +12,7 @@ import android.graphics.Rect;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,8 +30,13 @@ import android.widget.TextView;
 
 import com.example.sergey.myapplication.DataBase.DataBaseHelper;
 
+import com.example.sergey.myapplication.fragments.BanxFragment;
 import com.example.sergey.myapplication.fragments.FragmentCredits;
 import com.example.sergey.myapplication.fragments.FragmentVklads;
+import com.example.sergey.myapplication.fragments.MyCredits;
+import com.example.sergey.myapplication.fragments.MyVklads;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -58,9 +64,13 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
     DataBaseHelper dbHelper;
     FragmentVklads fvklads;
     FragmentCredits fragmentCredits;
+    MyCredits credits;
+    MyVklads vklads;
+    BanxFragment banxFragment;
 
     NavigationView navigationView;
     SlidingRootNav slidingBuilder;
+    AdView mAdView;
 
 
 
@@ -74,10 +84,15 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
         setContentView(R.layout.activity_main);
         fragmentCredits = new FragmentCredits();
         fvklads = new FragmentVklads();
+        credits = new MyCredits();
+        banxFragment = new BanxFragment();
+        vklads = new MyVklads();
         @SuppressLint("ResourceType") LinearLayout menuLayout = findViewById(R.layout.activity);
 
 
-
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
 
 
@@ -93,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
         slidingBuilder = new SlidingRootNavBuilder(this)
                 .withMenuLayout(R.layout.activity)
                 .withToolbarMenuToggle(toolbar)
+                .withSavedState(savedInstanceState)
                 .inject();
 
         navigationView = findViewById(R.id.menu);
@@ -127,24 +143,34 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-        SQLiteDatabase database = dbHelper.getWritableDatabase();
         int id = item.getItemId();
+
+        FragmentTransaction ftrans = getSupportFragmentManager().beginTransaction();
 
         if (id == R.id.vklads){
             toolbar_text.setText("DEPOSITS");
 
 
-            FragmentTransaction ftrans = getSupportFragmentManager().beginTransaction().replace(R.id.container, fvklads);
-            ftrans.commit();
+            ftrans.replace(R.id.container, fvklads);
+
         } else if (id == R.id.kredits) {
             toolbar_text.setText("CREDITS");
+            ftrans.replace(R.id.container, fragmentCredits);
 
+        } else if (id == R.id.my_kredit){
+            ftrans.replace(R.id.container, credits);
 
-            FragmentTransaction ftrans = getSupportFragmentManager().beginTransaction().replace(R.id.container, fragmentCredits);
-            ftrans.commit();
+            toolbar_text.setText("MY CREDITS");
+        } else if (id == R.id.banks){
+            ftrans.replace(R.id.container, banxFragment);
+
+            toolbar_text.setText("BANX");
+        } else if (id == R.id.my_deposits){
+            ftrans.replace(R.id.container, vklads);
+            toolbar_text.setText("MY DEPOSITES");
         }
         slidingBuilder.closeMenu();
+        ftrans.commit();
 
         return true;
     }

@@ -11,8 +11,8 @@ import java.util.Comparator;
 public class PercentsCreditsComparator implements Comparator<DBCard>{
     @Override
     public int compare(DBCard o1, DBCard o2) {
-        double per1 = o1.percents;
-        double per2 = o2.percents;
+        double per1 = o1.perinrub;
+        double per2 = o2.perinrub;
 
         return Double.compare(per1, per2);
     }

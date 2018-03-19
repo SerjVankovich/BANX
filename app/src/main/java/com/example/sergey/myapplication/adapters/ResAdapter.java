@@ -2,9 +2,14 @@ package com.example.sergey.myapplication.adapters;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,16 +17,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.example.sergey.myapplication.DataBase.DBCard;
 import com.example.sergey.myapplication.DataBase.DataBaseHelper;
+import com.example.sergey.myapplication.GlobalFunctions;
 import com.example.sergey.myapplication.MainActivity;
 import com.example.sergey.myapplication.R;
 
+import com.example.sergey.myapplication.SiteActivity;
+import com.example.sergey.myapplication.comparaters.PercentVkladsCompatrator;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,6 +44,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
 import java.util.concurrent.TimeoutException;
 
 
@@ -41,12 +52,16 @@ import java.util.concurrent.TimeoutException;
 public class ResAdapter extends RecyclerView.Adapter<ResAdapter.ViewHolder> {
     List<DBCard> main_array;
     Context context;
+    String table;
     private final ViewBinderHelper vhelper;
 
-    public ResAdapter(Context context, List<DBCard> main_array) {
+    public ResAdapter(Context context, List<DBCard> main_array, String table) {
         this.context = context;
         this.main_array = main_array;
+        this.table = table;
         vhelper = new ViewBinderHelper();
+
+
 
     }
 
@@ -56,7 +71,8 @@ public class ResAdapter extends RecyclerView.Adapter<ResAdapter.ViewHolder> {
         TextView percents;
         TextView srok;
         TextView sum;
-        Button delete;
+        Button add;
+        Button like;
         ImageView icon;
         public ViewHolder(View itemView) {
             super(itemView);
@@ -65,18 +81,98 @@ public class ResAdapter extends RecyclerView.Adapter<ResAdapter.ViewHolder> {
             srok = itemView.findViewById(R.id.srok);
             sum = itemView.findViewById(R.id.sum);
             cardView = itemView.findViewById(R.id.card_view);
-            delete = itemView.findViewById(R.id.button_add);
+            add = itemView.findViewById(R.id.button_add);
+            like = itemView.findViewById(R.id.button_like);
             icon = itemView.findViewById(R.id.imageView);
 
 
         }
     }
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view, parent, false);
+    public ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
+        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view, parent, false);
 
-        ViewHolder vh = new ViewHolder(view);
-        final int position = vh.getAdapterPosition();
+        final ViewHolder vh = new ViewHolder(view);
+
+        vh.add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final int position = vh.getAdapterPosition();
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                View view_dialog = LayoutInflater.from(parent.getContext()).inflate(R.layout.dialog, parent, false);
+
+                TextView operation = view_dialog.findViewById(R.id.vklad);
+                TextView perText = view_dialog.findViewById(R.id.num_percents);
+                ImageView icon = view_dialog.findViewById(R.id.icon);
+                Button cancell = view_dialog.findViewById(R.id.cancel_action);
+                Button add = view_dialog.findViewById(R.id.add);
+
+                final EditText sum = view_dialog.findViewById(R.id.sum);
+                final EditText srok = view_dialog.findViewById(R.id.srok);
+                sum.setHint("Сумма (макс.: " + main_array.get(position).suminrub + ")");
+                srok.setHint("Срок (макс.: " + main_array.get(position).srokinrub + ")");
+
+                final String vkladName = main_array.get(position).title;
+                final String bankName = main_array.get(position).bank;
+                final Double percents = main_array.get(position).perinrub;
+                operation.setText(vkladName);
+                perText.setText(percents.toString() + "%");
+                GlobalFunctions.findImage(icon, position, main_array);
+
+                builder.setView(view_dialog);
+                final AlertDialog dialog = builder.create();
+
+                cancell.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+                add.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try{
+                            int summa =  Integer.parseInt(sum.getText().toString());
+                            int srokInt = Integer.parseInt(srok.getText().toString());
+                            if (summa <= main_array.get(position).suminrub){
+                                if (srokInt <= main_array.get(position).srokinrub){
+                                    DataBaseHelper helper = new DataBaseHelper(context);
+                                    SQLiteDatabase db = helper.getWritableDatabase();
+
+                                    ContentValues contentValues = new ContentValues();
+                                    contentValues.put(DataBaseHelper.KEY_TITLE, vkladName);
+                                    contentValues.put(DataBaseHelper.KEY_PERCENTS, percents);
+                                    contentValues.put(DataBaseHelper.KEY_SUM_IN_RUB, summa);
+                                    contentValues.put(DataBaseHelper.KEY_SROK_IN_RUB, srokInt);
+                                    contentValues.put(DataBaseHelper.KEY_BANK, bankName);
+
+                                    db.insert(table, null, contentValues);
+                                    db.close();
+                                    dialog.dismiss();
+                                } else{
+                                    Toast.makeText(context, "Извините, указан срок, больше максимального", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Toast.makeText(context, "Извините, указана сумма, больше максимальной", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (NumberFormatException e) {
+                            Toast.makeText(context, "Данные неверны", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                dialog.show();
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+            }
+        });
+        vh.like.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = vh.getAdapterPosition();
+                Intent intent = new Intent(context, SiteActivity.class);
+                intent.putExtra("link", main_array.get(position).link);
+                context.startActivity(intent);
+            }
+        });
         return vh;
     }
 
@@ -86,102 +182,10 @@ public class ResAdapter extends RecyclerView.Adapter<ResAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, final int position) {
 
         holder.title.setText(main_array.get(position).title);
-        holder.percents.setText(Double.toString(main_array.get(position).percents) + "%");
-        holder.srok.setText(main_array.get(position).srok);
-        holder.sum.setText(Integer.toString(main_array.get(position).sum));
-        String bank = main_array.get(position).bank;
-        switch (bank){
-            case "alfabank":
-                holder.icon.setImageResource(R.drawable.alfabank);
-                break;
-            case "atb":
-                holder.icon.setImageResource(R.drawable.atb);
-                break;
-            case "baikalinvestbank":
-                holder.icon.setImageResource(R.drawable.baikalinvestbank);
-                break;
-            case "bbrbank":
-                holder.icon.setImageResource(R.drawable.bbrbank);
-                break;
-            case "binbank":
-                holder.icon.setImageResource(R.drawable.binbank);
-                break;
-            case "dalnevostochny":
-                holder.icon.setImageResource(R.drawable.dalnevostochny);
-                break;
-            case "gazprombank":
-                holder.icon.setImageResource(R.drawable.gazprombank);
-                break;
-            case "homecreditbank":
-                holder.icon.setImageResource(R.drawable.homecreditbank);
-                break;
-            case "mosoblbank":
-                holder.icon.setImageResource(R.drawable.mosoblbank);
-                break;
-            case "mts-bank":
-                holder.icon.setImageResource(R.drawable.mts_bank);
-                break;
-            case "otkritie":
-                holder.icon.setImageResource(R.drawable.otkritie);
-                break;
-            case "pochtabank":
-                holder.icon.setImageResource(R.drawable.pochtabank);
-                break;
-            case "primorye":
-                holder.icon.setImageResource(R.drawable.primorye);
-                break;
-            case "primsotsbank":
-                holder.icon.setImageResource(R.drawable.primsotsbank);
-                break;
-            case "promsvyazbank":
-                holder.icon.setImageResource(R.drawable.promsvyazbank);
-                break;
-            case "ptkb":
-                holder.icon.setImageResource(R.drawable.ptkb);
-                break;
-            case "rgsbank":
-                holder.icon.setImageResource(R.drawable.rgsbank);
-                break;
-            case "rosbank":
-                holder.icon.setImageResource(R.drawable.rosbank);
-                break;
-            case "roscap":
-                holder.icon.setImageResource(R.drawable.roscap);
-                break;
-            case "rsb":
-                holder.icon.setImageResource(R.drawable.rsb);
-                break;
-            case "rshb":
-                holder.icon.setImageResource(R.drawable.rshb);
-                break;
-            case "rusfinancebank":
-                holder.icon.setImageResource(R.drawable.rusfinancebank);
-                break;
-            case "sberbank":
-                holder.icon.setImageResource(R.drawable.sberbank);
-                break;
-            case "skb-bank":
-                holder.icon.setImageResource(R.drawable.skb_bank);
-                break;
-            case "sovcombank":
-                holder.icon.setImageResource(R.drawable.sovcombank);
-                break;
-            case "sviaz-bank":
-                holder.icon.setImageResource(R.drawable.sviaz_bank);
-                break;
-            case "tinkoff":
-                holder.icon.setImageResource(R.drawable.tinkoff);
-                break;
-            case "ussury":
-                holder.icon.setImageResource(R.drawable.ussury);
-                break;
-            case "v-express-bank":
-                holder.icon.setImageResource(R.drawable.v_express_bank);
-                break;
-            case "vtb":
-                holder.icon.setImageResource(R.drawable.vtb);
-                break;
-        }
+        holder.percents.setText(Double.toString(main_array.get(position).perinrub) + "%");
+        holder.srok.setText(Integer.toString(main_array.get(position).srokinrub) + " " + getText(main_array.get(position).srokinrub, "дни"));
+        holder.sum.setText(Integer.toString(main_array.get(position).suminrub) + " " + getText(main_array.get(position).suminrub, "рубли"));
+        GlobalFunctions.findImage(holder.icon, position, main_array);
 
         vhelper.bind(holder.cardView, main_array.get(position).toString());
         vhelper.setOpenOnlyOne(true);
@@ -205,5 +209,26 @@ public class ResAdapter extends RecyclerView.Adapter<ResAdapter.ViewHolder> {
     public void deleteCardView(int position){
         main_array.remove(position);
         notifyItemRemoved(position);
+    }
+    public String getText(int num, String text) {
+        int number = num % 10;
+        if (text == "дни"){
+            if (number == 1) {
+                return "день";
+            } else if (number <= 9 && number >= 5 || number == 0 ){
+                return "дней";
+            } else if (number <= 4 && number >= 2 ) {
+                return "дня";
+            }
+        } else if (text == "рубли") {
+            if (number == 1) {
+                return "рубль";
+            } else if (number <= 9 && number >= 5 || number == 0 ){
+                return "рублей";
+            } else if (number <= 4 && number >= 2 ) {
+                return "рубля";
+            }
+        }
+        return text;
     }
 }

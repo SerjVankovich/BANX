@@ -15,11 +15,14 @@ import android.view.ViewGroup;
 
 import com.cooltechworks.views.shimmer.ShimmerRecyclerView;
 import com.example.sergey.myapplication.DataBase.DBCard;
+import com.example.sergey.myapplication.DataBase.DataBaseHelper;
 import com.example.sergey.myapplication.GlobalFunctions;
+import com.example.sergey.myapplication.LoadingThread;
 import com.example.sergey.myapplication.R;
 import com.example.sergey.myapplication.adapters.MyScrollListener;
 import com.example.sergey.myapplication.adapters.ResAdapter;
 import com.example.sergey.myapplication.comparaters.PercentVkladsCompatrator;
+import com.example.sergey.myapplication.comparaters.PercentsCreditsComparator;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,6 +35,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by sergey on 11.01.2018.
@@ -44,20 +48,22 @@ public class FragmentVklads extends Fragment {
     List<DBCard> main_array;
     Toolbar toolbar;
     PercentVkladsCompatrator compatrator;
+    PercentsCreditsComparator percentsCreditsComparator;
     int beginSlice = 0;
     int endSlice = 15;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_vklads, container, false);
+        main_array = new ArrayList<>();
 
         toolbar = container.findViewById(R.id.toolbar);
 
 
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        getMain_array();
-
+        LoadingThread thread = new LoadingThread(main_array, recyclerView, compatrator, new PercentsCreditsComparator(), adapter, getContext(), "all_vklads", "vklads", "vklads");
+        thread.execute();
         return view;
     }
 
@@ -76,7 +82,7 @@ public class FragmentVklads extends Fragment {
             adapter.restoreStates(savedInstanceState);
         }
     }
-    public void getMain_array (){
+ /*   public void getMain_array (){
         main_array = new ArrayList<>();
         final DatabaseReference myBase = FirebaseDatabase.getInstance().getReference();
 
@@ -105,14 +111,17 @@ public class FragmentVklads extends Fragment {
     public void updateUI(DataSnapshot snapshot){
         compatrator = new PercentVkladsCompatrator();
         Collections.sort(main_array, compatrator);
+
+
         List<DBCard> showArray = new ArrayList<>();
 
-        adapter = new ResAdapter(getContext(), showArray);
+        adapter = new ResAdapter(getContext(), showArray, DataBaseHelper.TABLE_VKLADS);
         GlobalFunctions.loadMore(main_array, showArray, adapter, 0, 15);
 
         recyclerView.setAdapter(adapter);
         recyclerView.addOnScrollListener(new MyScrollListener(recyclerView, main_array, adapter, showArray));
         recyclerView.hideShimmerAdapter();
-    }
+    } */
 
 }
+

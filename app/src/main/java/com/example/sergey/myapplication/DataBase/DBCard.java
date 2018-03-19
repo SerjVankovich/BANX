@@ -6,17 +6,22 @@ package com.example.sergey.myapplication.DataBase;
 
 public class DBCard {
     public String title;
-    public double percents;
-    public int sum;
-    public String srok;
+    public double perinrub;
+    public int suminrub;
+    public int srokinrub;
     public String bank;
     public int absoluteID;
+    public String link;
 
-    public DBCard(String title, double percents, int sum, String srok, String bank) {
+    public DBCard() {
+    }
+
+    public DBCard(String title, double percents, int sum, int srok, String bank, String link) {
+        this.link = link;
         this.title = title;
-        this.percents = percents;
-        this.sum = sum;
-        this.srok = srok;
+        this.perinrub = percents;
+        this.suminrub = sum;
+        this.srokinrub = srok;
         this.bank = bank;
     }
 }

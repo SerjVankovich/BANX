@@ -13,10 +13,13 @@ import android.view.ViewGroup;
 
 import com.cooltechworks.views.shimmer.ShimmerRecyclerView;
 import com.example.sergey.myapplication.DataBase.DBCard;
+import com.example.sergey.myapplication.DataBase.DataBaseHelper;
 import com.example.sergey.myapplication.GlobalFunctions;
+import com.example.sergey.myapplication.LoadingThread;
 import com.example.sergey.myapplication.R;
 import com.example.sergey.myapplication.adapters.MyScrollListener;
 import com.example.sergey.myapplication.adapters.ResAdapter;
+import com.example.sergey.myapplication.comparaters.PercentVkladsCompatrator;
 import com.example.sergey.myapplication.comparaters.PercentsCreditsComparator;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -45,10 +48,10 @@ public class FragmentCredits extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_credits, container, false);
-
+        main_array = new ArrayList<>();
         recyclerView = view.findViewById(R.id.this_res_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        getMainArray();
+        new LoadingThread(main_array, recyclerView,new PercentVkladsCompatrator(), comparator, adapter, getContext(), "all_kredits", "kredits", "kredits").execute();
 
         return view;
     }
@@ -67,7 +70,7 @@ public class FragmentCredits extends Fragment {
             adapter.restoreStates(savedInstanceState);
         }
     }
-    public void getMainArray(){
+ /*   public void getMainArray(){
         main_array = new ArrayList<>();
         DatabaseReference myBase = FirebaseDatabase.getInstance().getReference();
 
@@ -96,13 +99,13 @@ public class FragmentCredits extends Fragment {
         comparator = new PercentsCreditsComparator();
         Collections.sort(main_array, comparator);
         List<DBCard> showArray = new ArrayList<>();
-        adapter = new ResAdapter(getContext(), showArray);
+        adapter = new ResAdapter(getContext(), showArray, DataBaseHelper.TABLE_CREDITS);
         GlobalFunctions.loadMore(main_array, showArray, adapter, 0, 15);
 
         recyclerView.setAdapter(adapter);
         recyclerView.addOnScrollListener(new MyScrollListener(recyclerView, main_array, adapter, showArray));
 
         recyclerView.hideShimmerAdapter();
-    }
+    } */
 
 }
