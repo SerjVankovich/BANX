@@ -47,6 +47,7 @@ import java.util.Map;
 import java.util.TreeSet;
 import java.util.concurrent.TimeoutException;
 
+import info.hoang8f.widget.FButton;
 
 
 public class ResAdapter extends RecyclerView.Adapter<ResAdapter.ViewHolder> {
@@ -117,7 +118,7 @@ public class ResAdapter extends RecyclerView.Adapter<ResAdapter.ViewHolder> {
                 final Double percents = main_array.get(position).perinrub;
                 operation.setText(vkladName);
                 perText.setText(percents.toString() + "%");
-                GlobalFunctions.findImage(icon, position, main_array);
+                GlobalFunctions.findImage(icon, position, main_array, 100, 100);
 
                 builder.setView(view_dialog);
                 final AlertDialog dialog = builder.create();
@@ -134,8 +135,8 @@ public class ResAdapter extends RecyclerView.Adapter<ResAdapter.ViewHolder> {
                         try{
                             int summa =  Integer.parseInt(sum.getText().toString());
                             int srokInt = Integer.parseInt(srok.getText().toString());
-                            if (summa <= main_array.get(position).suminrub){
-                                if (srokInt <= main_array.get(position).srokinrub){
+                            if (summa >= main_array.get(position).suminrub){
+                                if (srokInt >= main_array.get(position).srokinrub){
                                     DataBaseHelper helper = new DataBaseHelper(context);
                                     SQLiteDatabase db = helper.getWritableDatabase();
 
@@ -150,10 +151,10 @@ public class ResAdapter extends RecyclerView.Adapter<ResAdapter.ViewHolder> {
                                     db.close();
                                     dialog.dismiss();
                                 } else{
-                                    Toast.makeText(context, "Извините, указан срок, больше максимального", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, "Извините, указан срок, меньше минимального", Toast.LENGTH_SHORT).show();
                                 }
                             } else {
-                                Toast.makeText(context, "Извините, указана сумма, больше максимальной", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "Извините, указана сумма, меньше максимальной", Toast.LENGTH_SHORT).show();
                             }
                         } catch (NumberFormatException e) {
                             Toast.makeText(context, "Данные неверны", Toast.LENGTH_SHORT).show();
@@ -170,6 +171,7 @@ public class ResAdapter extends RecyclerView.Adapter<ResAdapter.ViewHolder> {
                 int position = vh.getAdapterPosition();
                 Intent intent = new Intent(context, SiteActivity.class);
                 intent.putExtra("link", main_array.get(position).link);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }
         });
@@ -185,7 +187,7 @@ public class ResAdapter extends RecyclerView.Adapter<ResAdapter.ViewHolder> {
         holder.percents.setText(Double.toString(main_array.get(position).perinrub) + "%");
         holder.srok.setText(Integer.toString(main_array.get(position).srokinrub) + " " + getText(main_array.get(position).srokinrub, "дни"));
         holder.sum.setText(Integer.toString(main_array.get(position).suminrub) + " " + getText(main_array.get(position).suminrub, "рубли"));
-        GlobalFunctions.findImage(holder.icon, position, main_array);
+        GlobalFunctions.findImage(holder.icon, position, main_array, 120, 120);
 
         vhelper.bind(holder.cardView, main_array.get(position).toString());
         vhelper.setOpenOnlyOne(true);
@@ -231,4 +233,5 @@ public class ResAdapter extends RecyclerView.Adapter<ResAdapter.ViewHolder> {
         }
         return text;
     }
+
 }

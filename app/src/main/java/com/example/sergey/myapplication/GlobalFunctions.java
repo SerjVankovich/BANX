@@ -8,6 +8,7 @@ import com.example.sergey.myapplication.DataBase.DBCard;
 import com.example.sergey.myapplication.adapters.ResAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.GenericTypeIndicator;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -122,98 +123,98 @@ public class GlobalFunctions {
 
 
     }
-    public static void findImage(ImageView imageView, int position, List<DBCard> main_array){
+    public static void findImage(ImageView imageView, int position, List<DBCard> main_array, int width, int height){
         String bank = main_array.get(position).bank;
         switch (bank){
             case "alfabank":
-                imageView.setImageResource(R.drawable.alfabank);
+                Picasso.get().load(R.drawable.alfabank).resize(width, height).centerCrop().centerCrop().into(imageView);
                 break;
             case "atb":
-                imageView.setImageResource(R.drawable.atb);
+                Picasso.get().load(R.drawable.atb).resize(width, height).centerCrop().into(imageView);
                 break;
             case "baikalinvestbank":
-                imageView.setImageResource(R.drawable.baikalinvestbank);
+                Picasso.get().load(R.drawable.baikalinvestbank).resize(width, height).centerCrop().into(imageView);
                 break;
             case "bbrbank":
-                imageView.setImageResource(R.drawable.bbrbank);
+                Picasso.get().load(R.drawable.bbrbank).resize(width, height).centerCrop().into(imageView);
                 break;
             case "binbank":
-                imageView.setImageResource(R.drawable.binbank);
+                Picasso.get().load(R.drawable.binbank).resize(width, height).centerCrop().into(imageView);
                 break;
             case "dalnevostochny":
-                imageView.setImageResource(R.drawable.dalnevostochny);
+                Picasso.get().load(R.drawable.dalnevostochny).resize(width, height).centerCrop().into(imageView);
                 break;
             case "gazprombank":
-                imageView.setImageResource(R.drawable.gazprombank);
+                Picasso.get().load(R.drawable.gazprombank).resize(width, height).centerCrop().into(imageView);
                 break;
             case "homecreditbank":
-                imageView.setImageResource(R.drawable.homecreditbank);
+                Picasso.get().load(R.drawable.homecreditbank).resize(width, height).centerCrop().into(imageView);
                 break;
             case "mosoblbank":
-                imageView.setImageResource(R.drawable.mosoblbank);
+                Picasso.get().load(R.drawable.mosoblbank).resize(width, height).centerCrop().into(imageView);
                 break;
             case "mts-bank":
-                imageView.setImageResource(R.drawable.mts_bank);
+                Picasso.get().load(R.drawable.mts_bank).resize(width, height).centerCrop().into(imageView);
                 break;
             case "otkritie":
-                imageView.setImageResource(R.drawable.otkritie);
+                Picasso.get().load(R.drawable.otkritie).resize(width, height).centerCrop().into(imageView);
                 break;
             case "pochtabank":
-                imageView.setImageResource(R.drawable.pochtabank);
+                Picasso.get().load(R.drawable.pochtabank).resize(width, height).centerCrop().into(imageView);
                 break;
             case "primorye":
-                imageView.setImageResource(R.drawable.primorye);
+                Picasso.get().load(R.drawable.primorye).resize(width, height).centerCrop().into(imageView);
                 break;
             case "primsotsbank":
-                imageView.setImageResource(R.drawable.primsotsbank);
+                Picasso.get().load(R.drawable.primsotsbank).resize(width, height).centerCrop().into(imageView);
                 break;
             case "promsvyazbank":
-                imageView.setImageResource(R.drawable.promsvyazbank);
+                Picasso.get().load(R.drawable.promsvyazbank).resize(width, height).centerCrop().into(imageView);
                 break;
             case "ptkb":
-                imageView.setImageResource(R.drawable.ptkb);
+                Picasso.get().load(R.drawable.ptkb).resize(width, height).centerCrop().into(imageView);
                 break;
             case "rgsbank":
-                imageView.setImageResource(R.drawable.rgsbank);
+                Picasso.get().load(R.drawable.rgsbank).resize(width, height).centerCrop().into(imageView);
                 break;
             case "rosbank":
-                imageView.setImageResource(R.drawable.rosbank);
+                Picasso.get().load(R.drawable.rosbank).resize(width, height).centerCrop().into(imageView);
                 break;
             case "roscap":
-                imageView.setImageResource(R.drawable.roscap);
+                Picasso.get().load(R.drawable.roscap).resize(width, height).centerCrop().into(imageView);
                 break;
             case "rsb":
-                imageView.setImageResource(R.drawable.rsb);
+                Picasso.get().load(R.drawable.rsb).resize(width, height).centerCrop().into(imageView);
                 break;
             case "rshb":
-                imageView.setImageResource(R.drawable.rshb);
+                Picasso.get().load(R.drawable.rshb).resize(width, height).centerCrop().into(imageView);
                 break;
             case "rusfinancebank":
-                imageView.setImageResource(R.drawable.rusfinancebank);
+                Picasso.get().load(R.drawable.rusfinancebank).resize(width, height).centerCrop().into(imageView);
                 break;
             case "sberbank":
-                imageView.setImageResource(R.drawable.sberbank);
+                Picasso.get().load(R.drawable.sberbank).resize(width, height).centerCrop().into(imageView);
                 break;
             case "skb-bank":
-                imageView.setImageResource(R.drawable.skb_bank);
+                Picasso.get().load(R.drawable.skb_bank).resize(width, height).centerCrop().into(imageView);
                 break;
             case "sovcombank":
-                imageView.setImageResource(R.drawable.sovcombank);
+                Picasso.get().load(R.drawable.sovcombank).resize(width, height).centerCrop().into(imageView);
                 break;
             case "sviaz-bank":
-                imageView.setImageResource(R.drawable.sviaz_bank);
+                Picasso.get().load(R.drawable.sviaz_bank).resize(width, height).centerCrop().into(imageView);
                 break;
             case "tinkoff":
-                imageView.setImageResource(R.drawable.tinkoff);
+                Picasso.get().load(R.drawable.tinkoff).resize(width, height).centerCrop().into(imageView);
                 break;
             case "ussury":
-                imageView.setImageResource(R.drawable.ussury);
+                Picasso.get().load(R.drawable.ussury).resize(width, height).centerCrop().into(imageView);
                 break;
             case "v-express-bank":
-                imageView.setImageResource(R.drawable.v_express_bank);
+                Picasso.get().load(R.drawable.v_express_bank).resize(width, height).centerCrop().into(imageView);
                 break;
             case "vtb":
-                imageView.setImageResource(R.drawable.vtb);
+                Picasso.get().load(R.drawable.vtb).resize(width, height).centerCrop().into(imageView);
                 break;
         }
     }

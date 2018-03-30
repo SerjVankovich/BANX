@@ -12,12 +12,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.cooltechworks.views.shimmer.ShimmerRecyclerView;
 import com.example.sergey.myapplication.DataBase.DBCard;
 import com.example.sergey.myapplication.DataBase.DataBaseHelper;
 import com.example.sergey.myapplication.GlobalFunctions;
 import com.example.sergey.myapplication.LoadingThread;
+import com.example.sergey.myapplication.MainActivity;
 import com.example.sergey.myapplication.R;
 import com.example.sergey.myapplication.adapters.MyScrollListener;
 import com.example.sergey.myapplication.adapters.ResAdapter;
@@ -41,29 +43,50 @@ import java.util.Objects;
  * Created by sergey on 11.01.2018.
  */
 
-public class FragmentVklads extends Fragment {
+public class FragmentVklads extends Fragment implements Getter {
+
+
     ShimmerRecyclerView recyclerView;
+
     Context context;
     ResAdapter adapter;
     List<DBCard> main_array;
-    Toolbar toolbar;
-    PercentVkladsCompatrator compatrator;
-    PercentsCreditsComparator percentsCreditsComparator;
-    int beginSlice = 0;
-    int endSlice = 15;
+    DatabaseReference ref;
+
+    public void setMain_array(List<DBCard> main_array) {
+        this.main_array = main_array;
+    }
+    public ShimmerRecyclerView getRecyclerView() {
+        return recyclerView;
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_vklads, container, false);
         main_array = new ArrayList<>();
+        context = getContext();
 
-        toolbar = container.findViewById(R.id.toolbar);
+        ref = FirebaseDatabase.getInstance().getReference();
+        ref.child("all_vklads").child("vklads").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                GenericTypeIndicator<List<DBCard>> t = new GenericTypeIndicator<List<DBCard>>(){};
+                main_array = dataSnapshot.getValue(t);
+                recyclerView.setAdapter(new ResAdapter(context, main_array, DataBaseHelper.TABLE_VKLADS));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
 
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        LoadingThread thread = new LoadingThread(main_array, recyclerView, compatrator, new PercentsCreditsComparator(), adapter, getContext(), "all_vklads", "vklads", "vklads");
-        thread.execute();
+ //       LoadingThread thread = new LoadingThread(main_array, recyclerView, compatrator, new PercentsCreditsComparator(), adapter, getContext(), "all_vklads", "vklads", "vklads");
+  //      thread.execute();
         return view;
     }
 
@@ -81,6 +104,11 @@ public class FragmentVklads extends Fragment {
         if (adapter!= null) {
             adapter.restoreStates(savedInstanceState);
         }
+    }
+
+    @Override
+    public List<DBCard> getMainArray() {
+        return main_array;
     }
  /*   public void getMain_array (){
         main_array = new ArrayList<>();

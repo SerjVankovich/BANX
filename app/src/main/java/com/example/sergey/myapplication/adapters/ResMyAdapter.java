@@ -112,7 +112,7 @@ public class ResMyAdapter extends RecyclerView.Adapter<ResMyAdapter.ViewHolder> 
         holder.percents.setText(Double.toString(main_array.get(position).perinrub) + "%");
         holder.srok.setText(Integer.toString(main_array.get(position).srokinrub));
         holder.sum.setText(Integer.toString(main_array.get(position).suminrub));
-        GlobalFunctions.findImage(holder.icon, position, main_array);
+        GlobalFunctions.findImage(holder.icon, position, main_array, 120, 120);
         helper.bind(holder.cardView, main_array.get(position).toString());
         helper.setOpenOnlyOne(true);
 

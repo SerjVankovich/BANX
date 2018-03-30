@@ -38,20 +38,40 @@ import java.util.Map;
  * Created by sergey on 10.02.2018.
  */
 
-public class FragmentCredits extends Fragment {
+public class FragmentCredits extends Fragment implements Getter {
     ShimmerRecyclerView recyclerView;
     ResAdapter adapter;
     List<DBCard> main_array;
     PercentsCreditsComparator comparator;
+    DatabaseReference ref;
     @Nullable
     @Override
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_credits, container, false);
         main_array = new ArrayList<>();
+
         recyclerView = view.findViewById(R.id.this_res_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        new LoadingThread(main_array, recyclerView,new PercentVkladsCompatrator(), comparator, adapter, getContext(), "all_kredits", "kredits", "kredits").execute();
+
+        ref = FirebaseDatabase.getInstance().getReference();
+        ref.child("all_kredits").child("kredits").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                GenericTypeIndicator<List<DBCard>> t = new GenericTypeIndicator<List<DBCard>>(){};
+                main_array = dataSnapshot.getValue(t);
+      //          new LoadingThread(main_array, new PercentVkladsCompatrator(), comparator, "kredits", getContext()).execute();
+                recyclerView.setAdapter(new ResAdapter(getContext(), main_array, DataBaseHelper.TABLE_CREDITS));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+ //       new LoadingThread(main_array, recyclerView,new PercentVkladsCompatrator(), comparator, adapter, getContext(), "all_kredits", "kredits", "kredits").execute();
 
         return view;
     }
@@ -69,6 +89,16 @@ public class FragmentCredits extends Fragment {
         if (adapter!= null) {
             adapter.restoreStates(savedInstanceState);
         }
+    }
+
+    @Override
+    public List<DBCard> getMainArray() {
+        return main_array;
+    }
+
+    @Override
+    public ShimmerRecyclerView getRecyclerView() {
+        return recyclerView;
     }
  /*   public void getMainArray(){
         main_array = new ArrayList<>();

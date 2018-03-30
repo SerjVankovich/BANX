@@ -27,10 +27,9 @@
                 android:text="ДОБАВИТЬ"
                 android:textColor="#FFFFFF"
                 android:textSize="22sp"
-
-                android:layout_width="150dp"
+                android:layout_width="160dp"
                 android:layout_height="110dp"
-                android:background="@drawable/button_style"
+                android:background="@drawable/anim_buttom_add"
                 />
             <Button
                 android:id="@+id/button_like"
@@ -41,9 +40,9 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="4dp"
 
-                android:layout_width="150dp"
+                android:layout_width="160dp"
                 android:layout_height="110dp"
-                android:background="@drawable/button_like_shape"
+                android:background="@drawable/anim_button_like"
                 />
 
         </LinearLayout>
@@ -101,7 +100,7 @@
                     android:layout_alignLeft="@+id/textView7"
                     android:layout_alignStart="@+id/textView7"
                     android:layout_below="@+id/textView7"
-                    android:text="Сумма:" />
+                    android:text="Сумма (мин.):" />
 
                 <TextView
                     android:id="@+id/textView9"
@@ -110,7 +109,7 @@
                     android:layout_alignLeft="@+id/textView8"
                     android:layout_alignStart="@+id/textView8"
                     android:layout_below="@+id/textView8"
-                    android:text="Срок (макс.):" />
+                    android:text="Срок (мин.):" />
 
                 <TextView
                     android:id="@+id/sum"

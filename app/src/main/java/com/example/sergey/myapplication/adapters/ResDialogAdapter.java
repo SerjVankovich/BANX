@@ -1,51 +1,73 @@
 package com.example.sergey.myapplication.adapters;
 
-import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.sergey.myapplication.DataBase.BankCard;
-import com.example.sergey.myapplication.GlobalFunctions;
+import com.example.sergey.myapplication.DataBase.DBCard;
 import com.example.sergey.myapplication.R;
+import com.example.sergey.myapplication.fragments.MyCredits;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
- * Created by sergey on 25.02.2018.
+ * Created by sergey on 27.03.2018.
  */
 
-public class ResBankAdapter extends RecyclerView.Adapter<ResBankAdapter.ViewHolder> {
-    private List<BankCard> main_array;
+public class ResDialogAdapter extends RecyclerView.Adapter<ResDialogAdapter.MyHolder> {
+    String[] main_array;
+    List<CheckBox> checkBoxes;
 
-    public ResBankAdapter(List<BankCard> main_array) {
+    public List<CheckBox> getCheckBoxes() {
+        return checkBoxes;
+    }
+
+    public ResDialogAdapter(String[] main_array) {
+        checkBoxes = new ArrayList<>();
         this.main_array = main_array;
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.bank_layout, parent, false);
-        return new ViewHolder(view);
+    public MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.bank_item, parent, false);
+        MyHolder holder = new MyHolder(view);
+        checkBoxes.add(holder.checkBox);
+        return holder;
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.creditsNum.setText(Integer.toString(main_array.get(position).credits));
-        holder.vkladsNum.setText(Integer.toString(main_array.get(position).vklads));
-        findImage(holder.bankName, holder.icon, main_array, position, 120, 120);
+    public void onBindViewHolder(@NonNull MyHolder holder, int position) {
+        findImage(holder.checkBox, holder.imageView,  position, main_array, 60, 60);
 
     }
 
     @Override
     public int getItemCount() {
-        return main_array.size();
+        return main_array.length;
     }
-    public void findImage(TextView bankName, ImageView imageView, List<BankCard> list, int position, int width, int height){
-        String bank = list.get(position).name;
+
+    static class MyHolder extends RecyclerView.ViewHolder{
+        CheckBox checkBox;
+        ImageView imageView;
+
+        public MyHolder(View itemView) {
+            super(itemView);
+            checkBox = itemView.findViewById(R.id.checkBox);
+            imageView = itemView.findViewById(R.id.imageView);
+        }
+    }
+    public void findImage(CheckBox bankName,ImageView imageView, int position, String[] list, int width, int height){
+        String bank = list[position];
         switch (bank){
             case "alfabank":
                 Picasso.get().load(R.drawable.alfabank).resize(width, height).centerCrop().centerCrop().into(imageView);
@@ -167,20 +189,6 @@ public class ResBankAdapter extends RecyclerView.Adapter<ResBankAdapter.ViewHold
                 Picasso.get().load(R.drawable.vtb).resize(width, height).centerCrop().centerCrop().into(imageView);
                 bankName.setText("Банк ВТБ");
                 break;
-        }
-    }
-
-    static class ViewHolder extends RecyclerView.ViewHolder{
-        TextView bankName;
-        TextView vkladsNum;
-        TextView creditsNum;
-        ImageView icon;
-        public ViewHolder(View itemView) {
-            super(itemView);
-            bankName = itemView.findViewById(R.id.BankName);
-            vkladsNum = itemView.findViewById(R.id.bank_fragment_vklads);
-            creditsNum = itemView.findViewById(R.id.bank_fragment_credits);
-            icon = itemView.findViewById(R.id.bankIcon);
         }
     }
 }

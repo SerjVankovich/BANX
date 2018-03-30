@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.provider.ContactsContract;
 import android.support.annotation.RequiresApi;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.cooltechworks.views.shimmer.ShimmerRecyclerView;
@@ -36,26 +37,19 @@ import java.util.Objects;
 
 public class LoadingThread extends AsyncTask<Void, Void, Void> {
     List<DBCard> main_array;
-    ShimmerRecyclerView recyclerView;
     PercentVkladsCompatrator compatrator;
     PercentsCreditsComparator percentsCreditsComparator;
-    ResAdapter adapter;
-    Context context;
-    String child;
-    String ChildChild;
     String whatComp;
+    Context context;
 
 
-    public LoadingThread(List<DBCard> main_array, ShimmerRecyclerView recyclerView, PercentVkladsCompatrator compatrator,PercentsCreditsComparator percentsCreditsComparator, ResAdapter adapter, Context context, String child, String ChildChild, String whatComp) {
-        this.recyclerView = recyclerView;
+    public LoadingThread(List<DBCard> main_array, PercentVkladsCompatrator compatrator, PercentsCreditsComparator percentsCreditsComparator, String whatComp, Context context) {
         this.main_array = main_array;
         this.compatrator = compatrator;
         this.percentsCreditsComparator = percentsCreditsComparator;
-        this.adapter = adapter;
-        this.context = context;
-        this.child = child;
-        this.ChildChild = ChildChild;
         this.whatComp = whatComp;
+        this.context = context;
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -72,19 +66,62 @@ public class LoadingThread extends AsyncTask<Void, Void, Void> {
 
 
     public void getMain_array (){
+        DataBaseHelper helper = new DataBaseHelper(context);
+        SQLiteDatabase db = helper.getWritableDatabase();
 
-        final DatabaseReference myBase = FirebaseDatabase.getInstance().getReference();
+        db.delete(DataBaseHelper.TABLE_CACHE, null, null);
+        for (DBCard card:
+             main_array) {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(DataBaseHelper.KEY_TITLE, card.title);
+            contentValues.put(DataBaseHelper.KEY_PERCENTS, card.perinrub);
+            contentValues.put(DataBaseHelper.KEY_SUM_IN_RUB, card.suminrub);
+            contentValues.put(DataBaseHelper.KEY_SROK_IN_RUB, card.srokinrub);
+            contentValues.put(DataBaseHelper.KEY_BANK, card.bank);
+            contentValues.put(DataBaseHelper.KEY_LINK, card.link);
+
+            db.insert(DataBaseHelper.TABLE_CACHE, null,  contentValues);
+        }
+        main_array = new ArrayList<>();
+        Cursor cursor = db.query(DataBaseHelper.TABLE_CACHE, null, null, null, null, null, DataBaseHelper.KEY_PERCENTS);
+        if (cursor.moveToFirst()){
+            int idInd = cursor.getColumnIndex(DataBaseHelper.KEY_ID);
+            int titleInd = cursor.getColumnIndex(DataBaseHelper.KEY_TITLE);
+            int perInd = cursor.getColumnIndex(DataBaseHelper.KEY_PERCENTS);
+            int sumInd = cursor.getColumnIndex(DataBaseHelper.KEY_SUM_IN_RUB);
+            int srokInd = cursor.getColumnIndex(DataBaseHelper.KEY_SROK_IN_RUB);
+            int bankInd = cursor.getColumnIndex(DataBaseHelper.KEY_BANK);
+            int linkInd = cursor.getColumnIndex(DataBaseHelper.KEY_LINK);
+            while(cursor.moveToNext()){
+                DBCard card = new DBCard(cursor.getString(titleInd), cursor.getDouble(perInd), cursor.getInt(sumInd), cursor.getInt(srokInd), cursor.getString(bankInd), cursor.getString(linkInd));
+                main_array.add(card);
+            }
+        }
+        cursor.close();
+        db.close();
 
 
 
-        myBase.child(child).child(ChildChild).addListenerForSingleValueEvent(new ValueEventListener() {
+
+
+
+
+ /*       myBase.child(child).child(ChildChild).addListenerForSingleValueEvent(new ValueEventListener() {
 
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 GenericTypeIndicator<List<DBCard>> t = new GenericTypeIndicator<List<DBCard>>(){};
                 main_array = dataSnapshot.getValue(t);
+                if (Objects.equals(whatComp, "vklads")){
+                    compatrator = new PercentVkladsCompatrator();
+                    Collections.sort(main_array, compatrator);
+                } else if (Objects.equals(whatComp, "kredits")) {
+                    percentsCreditsComparator = new PercentsCreditsComparator();
+                    Collections.sort(main_array, percentsCreditsComparator);
+                }
                 recyclerView.setAdapter(new ResAdapter(context, main_array, DataBaseHelper.TABLE_VKLADS));
+
             //    updateUI();
 
  /*               GlobalFunctions.getData(main_array, dataSnapshot, recyclerView);
@@ -108,7 +145,7 @@ public class LoadingThread extends AsyncTask<Void, Void, Void> {
                     db.insert(DataBaseHelper.TABLE_CACHE, null, contentValues);
 
                 }
-                updateUI(); */
+                updateUI();
 
 
 
@@ -119,13 +156,13 @@ public class LoadingThread extends AsyncTask<Void, Void, Void> {
                 // Failed to read value
                 Log.w("MyLog", "Failed to read value.", error.toException());
             }
-        });
+        });*/
 
 
     }
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void updateUI(){
-  /*      List<DBCard> list = new ArrayList<>();
+ //   @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+/*    public void updateUI(){
+        List<DBCard> list = new ArrayList<>();
         DataBaseHelper helper = new DataBaseHelper(context);
         SQLiteDatabase db = helper.getWritableDatabase();
         Cursor cursor = db.query(DataBaseHelper.TABLE_CACHE, null, null, null, null, null,null);
@@ -148,7 +185,7 @@ public class LoadingThread extends AsyncTask<Void, Void, Void> {
             }
         }
         cursor.close();
-        db.close(); */
+        db.close();
         if (Objects.equals(whatComp, "vklads")){
             compatrator = new PercentVkladsCompatrator();
             Collections.sort(main_array, compatrator);
@@ -164,5 +201,5 @@ public class LoadingThread extends AsyncTask<Void, Void, Void> {
         recyclerView.setAdapter(adapter);
     //    recyclerView.addOnScrollListener(new MyScrollListener(recyclerView, main_array, adapter, showArray));
         recyclerView.hideShimmerAdapter();
-    }
+    } */
 }
