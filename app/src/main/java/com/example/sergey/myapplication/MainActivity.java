@@ -432,7 +432,12 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
             @Override
             public void onClick(View v) {
                 List<DBCard> list = filterProc(fromPer, toPer, fromSum, toSum, fromSrok, toSrok, adapter, getter);
-                getter.getRecyclerView().setAdapter(new ResAdapter(MainActivity.this, list, DataBaseHelper.TABLE_VKLADS));
+                if (getter.getClass().isInstance(FragmentVklads.class)) {
+                    getter.getRecyclerView().setAdapter(new ResAdapter(MainActivity.this, list, DataBaseHelper.TABLE_VKLADS, "vklads"));
+                } else {
+                    getter.getRecyclerView().setAdapter(new ResAdapter(MainActivity.this, list, DataBaseHelper.TABLE_VKLADS, "credits"));
+                }
+
 
                 dialog.dismiss();
             }

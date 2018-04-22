@@ -56,12 +56,14 @@ public class ResAdapter extends RecyclerView.Adapter<ResAdapter.ViewHolder> {
     Context context;
     String table;
     private final ViewBinderHelper vhelper;
+    String whatUsl;
 
-    public ResAdapter(Context context, List<DBCard> main_array, String table) {
+    public ResAdapter(Context context, List<DBCard> main_array, String table, String whatUsl) {
         this.context = context;
         this.main_array = main_array;
         this.table = table;
         vhelper = new ViewBinderHelper();
+        this.whatUsl = whatUsl;
 
 
 
@@ -76,6 +78,8 @@ public class ResAdapter extends RecyclerView.Adapter<ResAdapter.ViewHolder> {
         TextView sum;
         Button add;
         ImageView icon;
+        TextView sumPok;
+        TextView srokPok;
         public ViewHolder(View itemView) {
             super(itemView);
             root = itemView.findViewById(R.id.root);
@@ -86,6 +90,8 @@ public class ResAdapter extends RecyclerView.Adapter<ResAdapter.ViewHolder> {
             cardView = itemView.findViewById(R.id.card_view);
             add = itemView.findViewById(R.id.button_add);
             icon = itemView.findViewById(R.id.imageView);
+            sumPok = itemView.findViewById(R.id.textView8);
+            srokPok = itemView.findViewById(R.id.textView9);
 
 
         }
@@ -105,14 +111,21 @@ public class ResAdapter extends RecyclerView.Adapter<ResAdapter.ViewHolder> {
 
                 TextView operation = view_dialog.findViewById(R.id.vklad);
                 TextView perText = view_dialog.findViewById(R.id.num_percents);
+
                 ImageView icon = view_dialog.findViewById(R.id.icon);
                 Button cancell = view_dialog.findViewById(R.id.cancel_action);
                 Button add = view_dialog.findViewById(R.id.add);
 
                 final EditText sum = view_dialog.findViewById(R.id.sum);
                 final EditText srok = view_dialog.findViewById(R.id.srok);
-                sum.setHint("Сумма (мин.: " + main_array.get(position).suminrub + ")");
-                srok.setHint("Срок (мин.: " + main_array.get(position).srokinrub + ")");
+                if (whatUsl.equals("vklads")){
+                    sum.setHint("Сумма (мин.: " + main_array.get(position).suminrub + ")");
+                    srok.setHint("Срок (мин.: " + main_array.get(position).srokinrub + ")");
+                } else {
+                    sum.setHint("Сумма (макс.: " + main_array.get(position).suminrub + ")");
+                    srok.setHint("Срок (макс.: " + main_array.get(position).srokinrub + ")");
+                }
+
 
                 final String vkladName = main_array.get(position).title;
                 final String bankName = main_array.get(position).bank;
@@ -136,26 +149,26 @@ public class ResAdapter extends RecyclerView.Adapter<ResAdapter.ViewHolder> {
                         try{
                             int summa =  Integer.parseInt(sum.getText().toString());
                             int srokInt = Integer.parseInt(srok.getText().toString());
-                            if (summa >= main_array.get(position).suminrub){
-                                if (srokInt >= main_array.get(position).srokinrub){
-                                    DataBaseHelper helper = new DataBaseHelper(context);
-                                    SQLiteDatabase db = helper.getWritableDatabase();
-
-                                    ContentValues contentValues = new ContentValues();
-                                    contentValues.put(DataBaseHelper.KEY_TITLE, vkladName);
-                                    contentValues.put(DataBaseHelper.KEY_PERCENTS, percents);
-                                    contentValues.put(DataBaseHelper.KEY_SUM_IN_RUB, summa);
-                                    contentValues.put(DataBaseHelper.KEY_SROK_IN_RUB, srokInt);
-                                    contentValues.put(DataBaseHelper.KEY_BANK, bankName);
-
-                                    db.insert(table, null, contentValues);
-                                    db.close();
-                                    dialog.dismiss();
-                                } else{
-                                    Toast.makeText(context, "Извините, указан срок, меньше минимального", Toast.LENGTH_SHORT).show();
+                            if (whatUsl.equals("vklads")){
+                                if (summa >= main_array.get(position).suminrub){
+                                    if (srokInt >= main_array.get(position).srokinrub){
+                                        writeToDB(vkladName, percents, summa, srokInt, bankName, dialog);
+                                    } else{
+                                        Toast.makeText(context, "Извините, указан срок, меньше минимального", Toast.LENGTH_SHORT).show();
+                                    }
+                                } else {
+                                    Toast.makeText(context, "Извините, указана сумма, меньше максимальной", Toast.LENGTH_SHORT).show();
                                 }
                             } else {
-                                Toast.makeText(context, "Извините, указана сумма, меньше максимальной", Toast.LENGTH_SHORT).show();
+                                if (summa <= main_array.get(position).suminrub){
+                                    if (srokInt <= main_array.get(position).srokinrub){
+                                        writeToDB(vkladName, percents, summa, srokInt, bankName, dialog);
+                                    } else{
+                                        Toast.makeText(context, "Извините, указан срок, больше минимального", Toast.LENGTH_SHORT).show();
+                                    }
+                                } else {
+                                    Toast.makeText(context, "Извините, указана сумма, больше максимальной", Toast.LENGTH_SHORT).show();
+                                }
                             }
                         } catch (NumberFormatException e) {
                             Toast.makeText(context, "Данные неверны", Toast.LENGTH_SHORT).show();
@@ -188,6 +201,10 @@ public class ResAdapter extends RecyclerView.Adapter<ResAdapter.ViewHolder> {
         holder.percents.setText(Double.toString(main_array.get(position).perinrub) + "%");
         holder.srok.setText(Integer.toString(main_array.get(position).srokinrub) + " " + getText(main_array.get(position).srokinrub, "дни"));
         holder.sum.setText(Integer.toString(main_array.get(position).suminrub) + " " + getText(main_array.get(position).suminrub, "рубли"));
+        if (!whatUsl.equals("vklads")){
+            holder.srokPok.setText("Срок (макс.):");
+            holder.sumPok.setText("Сумма (макс.):");
+        }
         GlobalFunctions.findImage(holder.icon, position, main_array, 120, 120);
 
         vhelper.bind(holder.cardView, main_array.get(position).toString());
@@ -233,6 +250,21 @@ public class ResAdapter extends RecyclerView.Adapter<ResAdapter.ViewHolder> {
             }
         }
         return text;
+    }
+    public void writeToDB(String vkladName, Double percents, int summa, int srokInt, String bankName, AlertDialog dialog){
+        DataBaseHelper helper = new DataBaseHelper(context);
+        SQLiteDatabase db = helper.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DataBaseHelper.KEY_TITLE, vkladName);
+        contentValues.put(DataBaseHelper.KEY_PERCENTS, percents);
+        contentValues.put(DataBaseHelper.KEY_SUM_IN_RUB, summa);
+        contentValues.put(DataBaseHelper.KEY_SROK_IN_RUB, srokInt);
+        contentValues.put(DataBaseHelper.KEY_BANK, bankName);
+
+        db.insert(table, null, contentValues);
+        db.close();
+        dialog.dismiss();
     }
 
 }

@@ -61,7 +61,7 @@ public class FragmentCredits extends Fragment implements Getter {
                 GenericTypeIndicator<List<DBCard>> t = new GenericTypeIndicator<List<DBCard>>(){};
                 main_array = dataSnapshot.getValue(t);
       //          new LoadingThread(main_array, new PercentVkladsCompatrator(), comparator, "kredits", getContext()).execute();
-                recyclerView.setAdapter(new ResAdapter(getContext(), main_array, DataBaseHelper.TABLE_CREDITS));
+                recyclerView.setAdapter(new ResAdapter(getContext(), main_array, DataBaseHelper.TABLE_CREDITS, "credits"));
             }
 
             @Override

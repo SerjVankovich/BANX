@@ -73,7 +73,7 @@ public class FragmentVklads extends Fragment implements Getter {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 GenericTypeIndicator<List<DBCard>> t = new GenericTypeIndicator<List<DBCard>>(){};
                 main_array = dataSnapshot.getValue(t);
-                recyclerView.setAdapter(new ResAdapter(context, main_array, DataBaseHelper.TABLE_VKLADS));
+                recyclerView.setAdapter(new ResAdapter(context, main_array, DataBaseHelper.TABLE_VKLADS, "vklads"));
             }
 
             @Override

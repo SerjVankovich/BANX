@@ -109,7 +109,12 @@ public class FragmentVkladsFromBanx extends Fragment {
     public void setAdapter () {
         List<String> list = new ArrayList<>();
         list.add(bankName);
-        recyclerView.setAdapter(new ResAdapter(context, MainActivity.filterByBank(main_array, list), DataBaseHelper.TABLE_VKLADS));
+        if (secondChild.equals("vklads")){
+            recyclerView.setAdapter(new ResAdapter(context, MainActivity.filterByBank(main_array, list), DataBaseHelper.TABLE_VKLADS, "vklads"));
+        } else {
+            recyclerView.setAdapter(new ResAdapter(context, MainActivity.filterByBank(main_array, list), DataBaseHelper.TABLE_VKLADS, "credits"));
+        }
+
     }
 
 }
