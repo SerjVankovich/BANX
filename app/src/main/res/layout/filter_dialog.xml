@@ -5,11 +5,11 @@
     app:cardCornerRadius="20dp"
     app:cardBackgroundColor="@android:color/white"
     app:cardElevation="10dp"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
 
     <LinearLayout
@@ -140,10 +140,11 @@
         </android.support.v7.widget.RecyclerView>
 
     </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/cancell"
@@ -156,15 +157,15 @@
 
             <ImageView
                 android:layout_width="5dp"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 app:srcCompat="@drawable/palka" />
 
             <Button
                 android:id="@+id/ok"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/shapes"
                 android:layout_weight="1"
+                android:background="@drawable/shapes"
                 android:text="Применить" />
         </LinearLayout>
 

@@ -46,6 +46,9 @@ public class MyCredits extends Fragment {
         ResMyAdapter adapter = new ResMyAdapter(getContext(), DataBaseHelper.TABLE_CREDITS);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        if (adapter.getItemCount() == 0) {
+            return inflater.inflate(R.layout.empty_fragment_credits, container, false);
+        }
 
         return view;
     }

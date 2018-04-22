@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.cooltechworks.views.shimmer.ShimmerRecyclerView;
 import com.example.sergey.myapplication.DataBase.DataBaseHelper;
 import com.example.sergey.myapplication.R;
 import com.example.sergey.myapplication.adapters.ResMyAdapter;
@@ -31,7 +30,12 @@ public class MyVklads extends Fragment {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
-        return view;
+        if (adapter.getItemCount() != 0){
+            return view;
+        } else {
+            return inflater.inflate(R.layout.empty_fragment_vklads, container, false);
+        }
+
 
     }
 }

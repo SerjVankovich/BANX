@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,6 +35,12 @@ import java.util.Map;
 public class BanxFragment extends Fragment {
     ShimmerRecyclerView recyclerView;
     List<BankCard> main_array;
+
+    public void setTransaction(FragmentTransaction transaction) {
+        this.transaction = transaction;
+    }
+
+    FragmentTransaction transaction;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -52,62 +59,10 @@ public class BanxFragment extends Fragment {
                 recyclerView.showShimmerAdapter();
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                GenericTypeIndicator<List<Object>> t = new GenericTypeIndicator<List<Object>>(){};
-                List<Object> value = dataSnapshot.getValue(t);
-                List<String> titles = new ArrayList<>();
-                List<Integer> vkladsNum = new ArrayList<>();
-                List<Integer> creditsNum = new ArrayList<>();
-
-                assert value != null;
-                for (Object obj:
-                        value) {
-                    boolean bankHas = false;
-                    boolean vkadsHas = false;
-                    boolean creditsHas = false;
-                    String bank = "";
-                    int vklads = 0;
-                    int credits = 0;
-                    Log.d("Hi", "Hello from method");
-
-                    HashMap<String, String > hashMap = (HashMap<String, String>) obj;
-                    for (Map.Entry<String, String> entry:
-                            hashMap.entrySet()) {
-                        String key = entry.getKey();
-                        Log.d("Hello", "Hello from cycle");
-                        switch (key){
-                            case "bank":
-                                bank = entry.getValue();
-                                Log.d("MLOG", entry.getValue());
-                                bankHas = true;
-                                break;
-                            case "len_cred":
-                                vklads = Integer.parseInt(entry.getValue());
-                                Log.d("MLOG", entry.getValue());
-                                vkadsHas = true;
-                                break;
-                            case "len_vklads":
-                                credits = Integer.parseInt(entry.getValue());
-                                Log.d("MLOG", entry.getValue());
-                                creditsHas = true;
-                                break;
-
-                        }
-
-                    }
-                    if (bankHas && vkadsHas && creditsHas){
-                        titles.add(bank);
-                        vkladsNum.add(vklads);
-                        creditsNum.add(credits);
-                    }
-
-
-                }
-                for (int i = 0; i < titles.size(); i++) {
-                    BankCard card = new BankCard(titles.get(i), creditsNum.get(i), vkladsNum.get(i));
-                    main_array.add(card);
-                }
-                Log.d("MyArray", "" + main_array.size());
+                GenericTypeIndicator<List<BankCard>> t = new GenericTypeIndicator<List<BankCard>>(){};
+                main_array = dataSnapshot.getValue(t);
                 updateUI();
+
             }
 
             @Override
@@ -119,7 +74,7 @@ public class BanxFragment extends Fragment {
     }
 
     private void updateUI() {
-        ResBankAdapter adapter = new ResBankAdapter(main_array);
+        ResBankAdapter adapter = new ResBankAdapter(main_array, transaction, getContext());
         recyclerView.setAdapter(adapter);
         recyclerView.hideShimmerAdapter();
     }

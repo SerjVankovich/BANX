@@ -26,14 +26,15 @@
 
         <Button
             android:id="@+id/filter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginRight="10dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_gravity="bottom"
-            android:text="FILT"
-            android:background="@color/colorAccent"
+
+            android:background="@drawable/anim_button_filter"
             android:visibility="invisible"
             android:enabled="false"
             android:textSize="20dp" />

@@ -19,6 +19,7 @@ public class SiteActivity extends AppCompatActivity {
         webView = findViewById(R.id.web_view);
         progressBar = findViewById(R.id.progressBar);
         webView.getSettings().setJavaScriptEnabled(true);
+        webView.loadUrl(getIntent().getStringExtra("link"));
         webView.setWebViewClient(new MyWebView() {
             @Override
             public void onPageFinished(WebView view, String url) {
@@ -26,7 +27,7 @@ public class SiteActivity extends AppCompatActivity {
                 view.setVisibility(View.VISIBLE);
             }
         });
-        webView.loadUrl(getIntent().getStringExtra("link"));
+
 
 
 

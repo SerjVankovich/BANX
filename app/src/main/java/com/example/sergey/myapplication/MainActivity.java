@@ -8,6 +8,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -50,7 +51,6 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
 
     Toolbar toolbar;
     TextView toolbar_text;
-    String tb_text;
     Button filter;
 
     DataBaseHelper dbHelper;
@@ -84,12 +84,6 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
         @SuppressLint("ResourceType") LinearLayout menuLayout = findViewById(R.layout.activity);
 
 
-        mAdView = findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .build();
-        mAdView.loadAd(adRequest);
-
         filter = findViewById(R.id.filter);
 
         toolbar = findViewById(R.id.toolbar);
@@ -110,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
         navigationView = findViewById(R.id.menu);
         navigationView.setNavigationItemSelectedListener(this);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        banxFragment.setTransaction(getSupportFragmentManager().beginTransaction());
         fragmentTransaction.replace(R.id.container, banxFragment);
         fragmentTransaction.commit();
         navigationView.setCheckedItem(R.id.banks);
@@ -120,24 +115,10 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
 
     @Override
     public void onBackPressed() {
-        if (fvklads.isResumed()){
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction().remove(fvklads);
-            fragmentTransaction.commit();
-            fvklads.onDetach();
-            slidingBuilder.closeMenu();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            banxFragment.setTransaction(transaction);
             toolbar_text.setText("BANX");
-            navigationView.refreshDrawableState();
-        } else if (fragmentCredits.isResumed()){
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction().remove(fragmentCredits);
-            fragmentTransaction.commit();
-            fragmentCredits.onDetach();
-            slidingBuilder.closeMenu();
-            toolbar_text.setText("BANX");
-            navigationView.refreshDrawableState();
-        } else {
             super.onBackPressed();
-        }
-
 
     }
 
@@ -146,9 +127,10 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
         int id = item.getItemId();
 
         FragmentTransaction ftrans = getSupportFragmentManager().beginTransaction();
+        ftrans.setCustomAnimations(R.animator.fragment_left_anim, R.animator.fragment_right_anim);
 
         if (id == R.id.vklads){
-            toolbar_text.setText("DEPOSITS");
+            toolbar_text.setText("ВКЛАДЫ");
 
             filter.setVisibility(View.VISIBLE);
             filter.setEnabled(true);
@@ -164,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
             ftrans.replace(R.id.container, fvklads);
 
         } else if (id == R.id.kredits) {
-            toolbar_text.setText("CREDITS");
+            toolbar_text.setText("КРЕДИТЫ");
             filter.setVisibility(View.VISIBLE);
             filter.setEnabled(true);
             filter.setOnClickListener(new View.OnClickListener() {
@@ -181,10 +163,11 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
             filter.setEnabled(false);
             ftrans.replace(R.id.container, credits);
 
-            toolbar_text.setText("MY CREDITS");
+            toolbar_text.setText("МОИ КРЕДИТЫ");
         } else if (id == R.id.banks){
             filter.setVisibility(View.INVISIBLE);
             filter.setEnabled(false);
+            banxFragment.setTransaction(getSupportFragmentManager().beginTransaction());
             ftrans.replace(R.id.container, banxFragment);
 
             toolbar_text.setText("BANX");
@@ -192,15 +175,15 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
             filter.setVisibility(View.INVISIBLE);
             filter.setEnabled(false);
             ftrans.replace(R.id.container, vklads);
-            toolbar_text.setText("MY DEPOSITES");
+            toolbar_text.setText("МОИ ВКЛАДЫ");
         } else if (id == R.id.valutes) {
             ftrans.replace(R.id.container, cotirFragment);
             filter.setVisibility(View.INVISIBLE);
             filter.setEnabled(false);
             toolbar_text.setText("КОТИРОВКИ");
         }
+        new LoadingThread(ftrans).execute();
         slidingBuilder.closeMenu();
-        ftrans.commit();
 
         return true;
     }
@@ -224,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public List<DBCard> filterByBank(List<DBCard> list, List<String> banks){
+    public static List<DBCard> filterByBank(List<DBCard> list, List<String> banks){
         if (!banks.isEmpty()) {
             List<DBCard> resultList = new ArrayList<>();
             for (DBCard card:

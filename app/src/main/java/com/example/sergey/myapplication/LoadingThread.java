@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.provider.ContactsContract;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
@@ -25,6 +26,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
+import com.yarolegovich.slidingrootnav.SlidingRootNav;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,69 +38,26 @@ import java.util.Objects;
  */
 
 public class LoadingThread extends AsyncTask<Void, Void, Void> {
-    List<DBCard> main_array;
-    PercentVkladsCompatrator compatrator;
-    PercentsCreditsComparator percentsCreditsComparator;
-    String whatComp;
-    Context context;
+    FragmentTransaction transaction;
 
 
-    public LoadingThread(List<DBCard> main_array, PercentVkladsCompatrator compatrator, PercentsCreditsComparator percentsCreditsComparator, String whatComp, Context context) {
-        this.main_array = main_array;
-        this.compatrator = compatrator;
-        this.percentsCreditsComparator = percentsCreditsComparator;
-        this.whatComp = whatComp;
-        this.context = context;
+    public LoadingThread(FragmentTransaction transaction) {
+        this.transaction = transaction;
 
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected Void doInBackground(Void... voids) {
-            getMain_array();
-
-
-        return null;
+            transaction.commit();
+            return null;
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
 
 
-    public void getMain_array (){
-        DataBaseHelper helper = new DataBaseHelper(context);
-        SQLiteDatabase db = helper.getWritableDatabase();
 
-        db.delete(DataBaseHelper.TABLE_CACHE, null, null);
-        for (DBCard card:
-             main_array) {
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(DataBaseHelper.KEY_TITLE, card.title);
-            contentValues.put(DataBaseHelper.KEY_PERCENTS, card.perinrub);
-            contentValues.put(DataBaseHelper.KEY_SUM_IN_RUB, card.suminrub);
-            contentValues.put(DataBaseHelper.KEY_SROK_IN_RUB, card.srokinrub);
-            contentValues.put(DataBaseHelper.KEY_BANK, card.bank);
-            contentValues.put(DataBaseHelper.KEY_LINK, card.link);
 
-            db.insert(DataBaseHelper.TABLE_CACHE, null,  contentValues);
-        }
-        main_array = new ArrayList<>();
-        Cursor cursor = db.query(DataBaseHelper.TABLE_CACHE, null, null, null, null, null, DataBaseHelper.KEY_PERCENTS);
-        if (cursor.moveToFirst()){
-            int idInd = cursor.getColumnIndex(DataBaseHelper.KEY_ID);
-            int titleInd = cursor.getColumnIndex(DataBaseHelper.KEY_TITLE);
-            int perInd = cursor.getColumnIndex(DataBaseHelper.KEY_PERCENTS);
-            int sumInd = cursor.getColumnIndex(DataBaseHelper.KEY_SUM_IN_RUB);
-            int srokInd = cursor.getColumnIndex(DataBaseHelper.KEY_SROK_IN_RUB);
-            int bankInd = cursor.getColumnIndex(DataBaseHelper.KEY_BANK);
-            int linkInd = cursor.getColumnIndex(DataBaseHelper.KEY_LINK);
-            while(cursor.moveToNext()){
-                DBCard card = new DBCard(cursor.getString(titleInd), cursor.getDouble(perInd), cursor.getInt(sumInd), cursor.getInt(srokInd), cursor.getString(bankInd), cursor.getString(linkInd));
-                main_array.add(card);
-            }
-        }
-        cursor.close();
-        db.close();
 
 
 
@@ -202,4 +161,4 @@ public class LoadingThread extends AsyncTask<Void, Void, Void> {
     //    recyclerView.addOnScrollListener(new MyScrollListener(recyclerView, main_array, adapter, showArray));
         recyclerView.hideShimmerAdapter();
     } */
-}
+

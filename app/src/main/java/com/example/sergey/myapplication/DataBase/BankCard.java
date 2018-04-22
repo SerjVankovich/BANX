@@ -5,13 +5,16 @@ package com.example.sergey.myapplication.DataBase;
  */
 
 public class BankCard {
-    public String name;
-    public int credits;
-    public int vklads;
+    public String bank;
+    public String  len_cred;
+    public String len_vklads;
 
-    public BankCard(String name, int credits, int vklads) {
-        this.name = name;
-        this.credits = credits;
-        this.vklads = vklads;
+    public BankCard() {
+    }
+
+    public BankCard(String name, String len_cred, String len_vklads) {
+        this.bank = name;
+        this.len_cred = len_cred;
+        this.len_vklads = len_vklads;
     }
 }

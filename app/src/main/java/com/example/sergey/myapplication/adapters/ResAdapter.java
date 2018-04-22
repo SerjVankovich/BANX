@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,23 +68,23 @@ public class ResAdapter extends RecyclerView.Adapter<ResAdapter.ViewHolder> {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
+        RelativeLayout root;
         SwipeRevealLayout cardView;
         TextView title;
         TextView percents;
         TextView srok;
         TextView sum;
         Button add;
-        Button like;
         ImageView icon;
         public ViewHolder(View itemView) {
             super(itemView);
+            root = itemView.findViewById(R.id.root);
             title = itemView.findViewById(R.id.Title);
             percents = itemView.findViewById(R.id.percents);
             srok = itemView.findViewById(R.id.srok);
             sum = itemView.findViewById(R.id.sum);
             cardView = itemView.findViewById(R.id.card_view);
             add = itemView.findViewById(R.id.button_add);
-            like = itemView.findViewById(R.id.button_like);
             icon = itemView.findViewById(R.id.imageView);
 
 
@@ -110,8 +111,8 @@ public class ResAdapter extends RecyclerView.Adapter<ResAdapter.ViewHolder> {
 
                 final EditText sum = view_dialog.findViewById(R.id.sum);
                 final EditText srok = view_dialog.findViewById(R.id.srok);
-                sum.setHint("Сумма (макс.: " + main_array.get(position).suminrub + ")");
-                srok.setHint("Срок (макс.: " + main_array.get(position).srokinrub + ")");
+                sum.setHint("Сумма (мин.: " + main_array.get(position).suminrub + ")");
+                srok.setHint("Срок (мин.: " + main_array.get(position).srokinrub + ")");
 
                 final String vkladName = main_array.get(position).title;
                 final String bankName = main_array.get(position).bank;
@@ -165,7 +166,7 @@ public class ResAdapter extends RecyclerView.Adapter<ResAdapter.ViewHolder> {
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
             }
         });
-        vh.like.setOnClickListener(new View.OnClickListener() {
+        vh.root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int position = vh.getAdapterPosition();

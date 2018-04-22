@@ -41,10 +41,10 @@ public class ResCotAdapter extends RecyclerView.Adapter<ResCotAdapter.Holder> {
         double raznost = main_array.get(position).getValue() - main_array.get(position).getPrivious();
         if (raznost >= 0) {
             holder.razn.setBackgroundResource(R.drawable.shape_text_green);
-            holder.razn.setText(String.valueOf(raznost).substring(0, 4));
+            holder.razn.setText(String.valueOf(raznost).substring(0, 5));
         } else {
             holder.razn.setBackgroundResource(R.drawable.shape_text);
-            holder.razn.setText(String.valueOf(raznost).substring(0, 4));
+            holder.razn.setText(String.valueOf(raznost).substring(0, 6));
         }
 
     }

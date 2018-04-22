@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">My Application</string>
     <string name="banner_ad_unit_id">ca-app-pub-9639058153567832/4734618176</string>
+    <string name="text_with_empty">Пока тут пусто. Вы можете добавить сюда вклады через меню</string>
+    <string name="text_with_empty_credits">Пока тут пусто. Вы можете добавить сюда кредиты через меню</string>
 </resources>

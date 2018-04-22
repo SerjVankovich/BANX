@@ -17,7 +17,7 @@
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Are you sure?"
+            android:text="Вы уверены?"
             android:layout_marginBottom="10dp"/>
 
         <LinearLayout
@@ -30,10 +30,10 @@
                 android:layout_weight="1"
                 android:background="@drawable/shapes"
                 android:layout_height="wrap_content"
-                android:text="CANCEL"/>
+                android:text="Отмена"/>
             <Button
                 android:id="@+id/yes"
-                android:text="YES"
+                android:text="ДА"
                 android:layout_weight="1"
                 android:background="@drawable/shape_left_button"
                 android:layout_width="match_parent"

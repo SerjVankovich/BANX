@@ -85,8 +85,7 @@ public class FragmentVklads extends Fragment implements Getter {
 
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
- //       LoadingThread thread = new LoadingThread(main_array, recyclerView, compatrator, new PercentsCreditsComparator(), adapter, getContext(), "all_vklads", "vklads", "vklads");
-  //      thread.execute();
+
         return view;
     }
 
