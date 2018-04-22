@@ -79,19 +79,22 @@
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:layout_marginTop="20dp">
+
             <Button
                 android:id="@+id/cancel_action"
-                android:layout_weight="1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="@drawable/shapes"
                 android:text="Отмена"
                 android:textColor="#000000"
-                android:textSize="20sp" />
+                android:textSize="15sp" />
             <ImageView
                 android:id="@+id/imageView3"
-                android:layout_width="5dp"
+                android:background="@android:color/white"
+                android:layout_width="2dp"
                 android:layout_height="50dp"
+                android:layout_marginTop="5dp"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:paddingBottom="5dp"
@@ -101,11 +104,11 @@
                 android:id="@+id/add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="@drawable/shape_left_button"
                 android:text="Добавить"
-                android:layout_weight="1"
                 android:textColor="#000000"
-                android:textSize="20sp" />
+                android:textSize="15sp" />
 
 
 
