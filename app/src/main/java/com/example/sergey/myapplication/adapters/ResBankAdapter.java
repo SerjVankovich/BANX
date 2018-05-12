@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -19,6 +20,7 @@ import com.example.sergey.myapplication.DataBase.BankCard;
 import com.example.sergey.myapplication.DataBase.DBCard;
 import com.example.sergey.myapplication.GlobalFunctions;
 import com.example.sergey.myapplication.MainActivity;
+import com.example.sergey.myapplication.MapActivity;
 import com.example.sergey.myapplication.R;
 import com.example.sergey.myapplication.SiteActivity;
 import com.example.sergey.myapplication.fragments.FragmentVklads;
@@ -86,6 +88,15 @@ public class ResBankAdapter extends RecyclerView.Adapter<ResBankAdapter.ViewHold
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
 
+            }
+        });
+        holder.mapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = holder.getAdapterPosition();
+                Intent intent = new Intent(context, MapActivity.class);
+                intent.putExtra("bankName", main_array.get(position).bank);
+                context.startActivity(intent);
             }
         });
 
@@ -240,11 +251,13 @@ public class ResBankAdapter extends RecyclerView.Adapter<ResBankAdapter.ViewHold
         ImageView icon;
         Button vkladsBtn;
         Button creditsBtn;
+        ImageButton mapButton;
         RelativeLayout root;
         public ViewHolder(View itemView) {
             super(itemView);
             vkladsBtn = itemView.findViewById(R.id.vklads_btn);
             creditsBtn = itemView.findViewById(R.id.credits_btn);
+            mapButton = itemView.findViewById(R.id.mapButton);
             bankCard = itemView.findViewById(R.id.card_view);
             bankName = itemView.findViewById(R.id.BankName);
             vkladsNum = itemView.findViewById(R.id.bank_fragment_vklads);
