@@ -94,6 +94,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
 
 
+
     }
     public String toFull(String bank) {
         String bankName = "";
