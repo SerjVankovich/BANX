@@ -25,18 +25,27 @@
             android:icon="@drawable/valutes_icon"
             android:title="Котировки"
             tools:ignore="HardcodedText" />
-
-            <item android:title="">
+        <item
+            android:id="@+id/my_deposits"
+            android:title="Мои вклады"
+            android:icon="@drawable/my_vklads_icon" />
+        <item
+            android:id="@+id/my_kredit"
+            android:icon="@drawable/my_credits_icon"
+            android:title="Мои кредиты" />
+        <item android:title="Другое"
+            android:checkable="true"
+                   >
                 <menu>
+
                     <item
-                        android:id="@+id/my_deposits"
-                        android:title="Мои вклады"
-                        android:icon="@drawable/my_vklads_icon"/>
-                    <item
-                        android:id="@+id/my_kredit"
-                        android:icon="@drawable/my_credits_icon"
-                        android:title="Мои кредиты" />
+                        android:id="@+id/about"
+                        android:checkable="true"
+                        android:icon="@android:drawable/ic_menu_info_details"
+                        android:title="О приложении" />
                 </menu>
-            </item>
+        </item>
+
     </group>
+
 </menu>

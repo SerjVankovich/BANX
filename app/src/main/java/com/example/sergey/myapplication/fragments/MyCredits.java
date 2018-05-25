@@ -36,6 +36,7 @@ import java.util.Map;
 
 public class MyCredits extends Fragment {
     ShimmerRecyclerView recyclerView;
+    ResMyAdapter adapter;
 
     @Nullable
     @Override
@@ -43,7 +44,7 @@ public class MyCredits extends Fragment {
         View view = inflater.inflate(R.layout.my_credits, container, false);
 
         recyclerView = view.findViewById(R.id.my_kredit);
-        ResMyAdapter adapter = new ResMyAdapter(getContext(), DataBaseHelper.TABLE_CREDITS);
+        adapter = new ResMyAdapter(getContext(), DataBaseHelper.TABLE_CREDITS);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         if (adapter.getItemCount() == 0) {

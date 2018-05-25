@@ -11,6 +11,7 @@ import com.google.firebase.database.GenericTypeIndicator;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -217,5 +218,28 @@ public class GlobalFunctions {
                 Picasso.get().load(R.drawable.vtb).resize(width, height).centerCrop().into(imageView);
                 break;
         }
+    }
+    public static String formatToComfort(String number) {
+        List<String> numList = new ArrayList<>();
+        StringBuffer buffer = new StringBuffer(number);
+        buffer.reverse();
+        String afterRev = buffer.toString();
+        String newStr = "";
+        for (int i = 0; i < afterRev.length(); i++) {
+            if (i % 3 == 0) {
+                numList.add(" ");
+                numList.add(String.valueOf(afterRev.charAt(i)));
+
+
+            } else {
+                numList.add(String.valueOf(afterRev.charAt(i)));
+            }
+        }
+        Collections.reverse(numList);
+        for (int i = 0; i < numList.size(); i++) {
+            newStr += numList.get(i);
+        }
+
+        return newStr;
     }
 }

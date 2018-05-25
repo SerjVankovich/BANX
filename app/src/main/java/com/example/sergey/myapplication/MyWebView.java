@@ -13,11 +13,5 @@ import android.widget.ProgressBar;
 abstract class MyWebView extends WebViewClient {
 
     @Override
-    public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-        view.loadUrl("https://ru.stackoverflow.com");
-        return true;
-    }
-
-    @Override
     public abstract void onPageFinished(WebView view, String url);
 }

@@ -27,10 +27,8 @@ repositories {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
-    //noinspection GradleCompatible
     implementation 'com.google.firebase:firebase-database:12.0.1'
     implementation 'com.google.firebase:firebase-ads:12.0.1'
     testImplementation 'junit:junit:4.12'
@@ -46,8 +44,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-ads:12.0.1'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'info.hoang8f:fbutton:1.0.5'
-    //noinspection UseOfBundledGooglePlayServices
     implementation 'com.google.android.gms:play-services:12.0.1'
+    implementation 'com.github.jrvansuita:MaterialAbout:+'
 
 }
 

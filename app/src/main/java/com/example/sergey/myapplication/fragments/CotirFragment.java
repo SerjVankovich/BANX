@@ -32,6 +32,7 @@ import java.util.Objects;
  */
 
 public class CotirFragment extends Fragment {
+    List<Cotirovka> main_array;
     ShimmerRecyclerView recyclerView;
     DatabaseReference databaseReference;
     @Nullable
@@ -46,7 +47,7 @@ public class CotirFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 GenericTypeIndicator<List<Cotirovka>> t = new GenericTypeIndicator<List<Cotirovka>>(){};
-                List<Cotirovka> main_array= dataSnapshot.getValue(t);
+                main_array= dataSnapshot.getValue(t);
                 for (int i = 0; i < main_array.size(); i++) {
                     if (Objects.equals(main_array.get(i).getCharCode(), "USD")) {
                         Cotirovka promcard = main_array.remove(i);

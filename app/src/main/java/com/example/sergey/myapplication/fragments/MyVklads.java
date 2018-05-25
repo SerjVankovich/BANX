@@ -20,13 +20,14 @@ import com.example.sergey.myapplication.adapters.ResMyAdapter;
 
 public class MyVklads extends Fragment {
     RecyclerView recyclerView;
+    ResMyAdapter adapter;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.my_credits, container, false);
 
         recyclerView = view.findViewById(R.id.my_kredit);
-        ResMyAdapter adapter = new ResMyAdapter(getContext(), DataBaseHelper.TABLE_VKLADS);
+        adapter = new ResMyAdapter(getContext(), DataBaseHelper.TABLE_VKLADS);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);

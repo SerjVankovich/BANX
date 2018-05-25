@@ -35,6 +35,7 @@ import java.util.Map;
 public class BanxFragment extends Fragment {
     ShimmerRecyclerView recyclerView;
     List<BankCard> main_array;
+    DatabaseReference reference;
 
     public void setTransaction(FragmentTransaction transaction) {
         this.transaction = transaction;
@@ -52,7 +53,7 @@ public class BanxFragment extends Fragment {
     }
     public void getMainArray(){
         main_array = new ArrayList<>();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        reference = FirebaseDatabase.getInstance().getReference();
         reference.child("all_banks").child("banks").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

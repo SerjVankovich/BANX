@@ -1,6 +1,9 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">BANX</string>
     <string name="banner_ad_unit_id">ca-app-pub-9639058153567832/4734618176</string>
     <string name="text_with_empty">Пока тут пусто. Вы можете добавить сюда вклады через меню</string>
     <string name="text_with_empty_credits">Пока тут пусто. Вы можете добавить сюда кредиты через меню</string>
+    <string name="dev_name">Сергей Ванькович</string>
+    <string name="subtitle">Ученик IT школы Samsung г. Владивостока</string>
+    <string name="about_banx">Приложение BANX может помочь вам в выборе вкладов и кредитов. В нём собраны более 30-ти банков Владивостока, офисы которых вы можете найти на карте!</string>
 </resources>

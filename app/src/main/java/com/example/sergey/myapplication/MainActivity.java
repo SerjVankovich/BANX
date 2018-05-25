@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
@@ -17,6 +18,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -30,6 +32,7 @@ import com.example.sergey.myapplication.DataBase.DataBaseHelper;
 
 import com.example.sergey.myapplication.adapters.ResAdapter;
 import com.example.sergey.myapplication.adapters.ResDialogAdapter;
+import com.example.sergey.myapplication.fragments.AboutMeFragment;
 import com.example.sergey.myapplication.fragments.BanxFragment;
 import com.example.sergey.myapplication.fragments.CotirFragment;
 import com.example.sergey.myapplication.fragments.FragmentCredits;
@@ -52,18 +55,21 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
     Toolbar toolbar;
     TextView toolbar_text;
     Button filter;
+    private String toolBarString;
 
     DataBaseHelper dbHelper;
-    FragmentVklads fvklads;
-    FragmentCredits fragmentCredits;
-    MyCredits credits;
-    MyVklads vklads;
-    BanxFragment banxFragment;
-    CotirFragment cotirFragment;
+    private FragmentVklads fvklads;
+    private FragmentCredits fragmentCredits;
+    private MyCredits credits;
+    private MyVklads vklads;
+    private BanxFragment banxFragment;
+    private CotirFragment cotirFragment;
+    private AboutMeFragment aboutMeFragment;
 
     NavigationView navigationView;
     SlidingRootNav slidingBuilder;
     private AdView mAdView;
+    private Fragment currentFragment;
 
 
 
@@ -75,10 +81,13 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        currentFragment = (Fragment) getLastCustomNonConfigurationInstance();
         fragmentCredits = new FragmentCredits();
         fvklads = new FragmentVklads();
         credits = new MyCredits();
         banxFragment = new BanxFragment();
+        aboutMeFragment = new AboutMeFragment();
+        toolBarString = "BANX";
         vklads = new MyVklads();
         cotirFragment = new CotirFragment();
         @SuppressLint("ResourceType") LinearLayout menuLayout = findViewById(R.layout.activity);
@@ -98,15 +107,29 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
         slidingBuilder = new SlidingRootNavBuilder(this)
                 .withMenuLayout(R.layout.activity)
                 .withToolbarMenuToggle(toolbar)
-                .withSavedState(savedInstanceState)
+                .withMenuOpened(false)
                 .inject();
 
         navigationView = findViewById(R.id.menu);
         navigationView.setNavigationItemSelectedListener(this);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
         banxFragment.setTransaction(getSupportFragmentManager().beginTransaction());
-        fragmentTransaction.replace(R.id.container, banxFragment);
-        fragmentTransaction.commit();
+
+        if (currentFragment != null) {
+            fragmentTransaction.replace(R.id.container, currentFragment).commit();
+            try {
+                banxFragment = (BanxFragment) currentFragment;
+                banxFragment.setTransaction(getSupportFragmentManager().beginTransaction());
+            } catch (RuntimeException ignored) { }
+
+        } else {
+            fragmentTransaction.replace(R.id.container, banxFragment);
+            fragmentTransaction.commit();
+            currentFragment = banxFragment;
+        }
+
+
         navigationView.setCheckedItem(R.id.banks);
 
     }
@@ -130,7 +153,8 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
         ftrans.setCustomAnimations(R.animator.fragment_left_anim, R.animator.fragment_right_anim);
 
         if (id == R.id.vklads){
-            toolbar_text.setText("ВКЛАДЫ");
+            toolBarString = "ВКЛАДЫ";
+            currentFragment = fvklads;
 
             filter.setVisibility(View.VISIBLE);
             filter.setEnabled(true);
@@ -146,7 +170,8 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
             ftrans.replace(R.id.container, fvklads);
 
         } else if (id == R.id.kredits) {
-            toolbar_text.setText("КРЕДИТЫ");
+            toolBarString = "КРЕДИТЫ";
+            currentFragment = fragmentCredits;
             filter.setVisibility(View.VISIBLE);
             filter.setEnabled(true);
             filter.setOnClickListener(new View.OnClickListener() {
@@ -163,26 +188,37 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
             filter.setEnabled(false);
             ftrans.replace(R.id.container, credits);
 
-            toolbar_text.setText("МОИ КРЕДИТЫ");
+            toolBarString = "МОИ КРЕДИТЫ";
+            currentFragment = credits;
         } else if (id == R.id.banks){
             filter.setVisibility(View.INVISIBLE);
             filter.setEnabled(false);
             banxFragment.setTransaction(getSupportFragmentManager().beginTransaction());
             ftrans.replace(R.id.container, banxFragment);
 
-            toolbar_text.setText("BANX");
+            toolBarString = "BANX";
+            currentFragment = banxFragment;
         } else if (id == R.id.my_deposits){
             filter.setVisibility(View.INVISIBLE);
             filter.setEnabled(false);
             ftrans.replace(R.id.container, vklads);
-            toolbar_text.setText("МОИ ВКЛАДЫ");
+            toolBarString = "МОИ ВКЛАДЫ";
+            currentFragment = vklads;
         } else if (id == R.id.valutes) {
             ftrans.replace(R.id.container, cotirFragment);
             filter.setVisibility(View.INVISIBLE);
             filter.setEnabled(false);
-            toolbar_text.setText("КОТИРОВКИ");
+            toolBarString = "КОТИРОВКИ";
+            currentFragment = cotirFragment;
+        } else if (id == R.id.about) {
+            ftrans.replace(R.id.container, aboutMeFragment);
+            filter.setVisibility(View.INVISIBLE);
+            filter.setEnabled(false);
+            toolBarString = "О ПРИЛОЖЕНИИ";
+            currentFragment = aboutMeFragment;
         }
         new LoadingThread(ftrans).execute();
+        toolbar_text.setText(toolBarString);
         slidingBuilder.closeMenu();
 
         return true;
@@ -258,27 +294,24 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if(fvklads.isAdded()) {
-            fvklads.onSaveInstanceState(outState);
-        } else if (fragmentCredits.isAdded()){
-            fragmentCredits.onSaveInstanceState(outState);
-        }
+        outState.putString("toolbar", toolBarString);
+
+
+
 
 
     }
 
     @Override
+    public Object onRetainCustomNonConfigurationInstance() {
+        return currentFragment;
+    }
+
+    @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        if (fvklads.isAdded()){
-            fvklads.onViewStateRestored(savedInstanceState);
-            this.onAttachFragment(fvklads);
-        } else if (fragmentCredits.isAdded()) {
-            fragmentCredits.onViewStateRestored(savedInstanceState);
-            this.onAttachFragment(fragmentCredits);
-        }
         super.onRestoreInstanceState(savedInstanceState);
-
-
+        toolBarString = savedInstanceState.getString("toolbar");
+        toolbar_text.setText(toolBarString);
     }
 
 
@@ -432,10 +465,10 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
             @Override
             public void onClick(View v) {
                 List<DBCard> list = filterProc(fromPer, toPer, fromSum, toSum, fromSrok, toSrok, adapter, getter);
-                if (getter.getClass().isInstance(FragmentVklads.class)) {
+                if (getter.getClass() == FragmentVklads.class) {
                     getter.getRecyclerView().setAdapter(new ResAdapter(MainActivity.this, list, DataBaseHelper.TABLE_VKLADS, "vklads"));
                 } else {
-                    getter.getRecyclerView().setAdapter(new ResAdapter(MainActivity.this, list, DataBaseHelper.TABLE_VKLADS, "credits"));
+                    getter.getRecyclerView().setAdapter(new ResAdapter(MainActivity.this, list, DataBaseHelper.TABLE_CREDITS, "credits"));
                 }
 
 

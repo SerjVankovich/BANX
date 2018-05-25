@@ -151,7 +151,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/shape_left_button"
+                android:background="@drawable/shapes"
                 android:text="Отмена" />
 
 
@@ -165,7 +165,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/shapes"
+                android:background="@drawable/shape_left_button"
                 android:text="Применить" />
         </LinearLayout>
 

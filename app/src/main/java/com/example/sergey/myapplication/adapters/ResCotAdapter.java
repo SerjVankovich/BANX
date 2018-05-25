@@ -1,5 +1,6 @@
 package com.example.sergey.myapplication.adapters;
 
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -40,11 +41,13 @@ public class ResCotAdapter extends RecyclerView.Adapter<ResCotAdapter.Holder> {
         holder.rub.setText(String.valueOf(main_array.get(position).getValue()) + " руб.");
         double raznost = main_array.get(position).getValue() - main_array.get(position).getPrivious();
         if (raznost >= 0) {
-            holder.razn.setBackgroundResource(R.drawable.shape_text_green);
-            holder.razn.setText(String.valueOf(raznost).substring(0, 5));
+  //          holder.razn.setBackgroundResource(R.drawable.shape_text_green);
+            holder.razn.setText("+" + String.valueOf(raznost).substring(0, 5));
+            holder.razn.setTextColor(Color.GREEN);
         } else {
-            holder.razn.setBackgroundResource(R.drawable.shape_text);
+   //         holder.razn.setBackgroundResource(R.drawable.shape_text);
             holder.razn.setText(String.valueOf(raznost).substring(0, 6));
+            holder.razn.setTextColor(Color.RED);
         }
 
     }

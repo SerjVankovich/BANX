@@ -119,11 +119,11 @@ public class ResAdapter extends RecyclerView.Adapter<ResAdapter.ViewHolder> {
                 final EditText sum = view_dialog.findViewById(R.id.sum);
                 final EditText srok = view_dialog.findViewById(R.id.srok);
                 if (whatUsl.equals("vklads")){
-                    sum.setHint("Сумма (мин.: " + main_array.get(position).suminrub + ")");
-                    srok.setHint("Срок (мин.: " + main_array.get(position).srokinrub + ")");
+                    sum.setHint("Сумма (мин.: " + GlobalFunctions.formatToComfort(String.valueOf(main_array.get(position).suminrub)) + ")");
+                    srok.setHint("Срок (мин.: " + GlobalFunctions.formatToComfort(String.valueOf(main_array.get(position).srokinrub)) + ")");
                 } else {
-                    sum.setHint("Сумма (макс.: " + main_array.get(position).suminrub + ")");
-                    srok.setHint("Срок (макс.: " + main_array.get(position).srokinrub + ")");
+                    sum.setHint("Сумма (макс.: " + GlobalFunctions.formatToComfort(String.valueOf(main_array.get(position).suminrub)) + ")");
+                    srok.setHint("Срок (макс.: " + GlobalFunctions.formatToComfort(String.valueOf(main_array.get(position).srokinrub)) + ")");
                 }
 
 
@@ -199,8 +199,8 @@ public class ResAdapter extends RecyclerView.Adapter<ResAdapter.ViewHolder> {
 
         holder.title.setText(main_array.get(position).title);
         holder.percents.setText(Double.toString(main_array.get(position).perinrub) + "%");
-        holder.srok.setText(Integer.toString(main_array.get(position).srokinrub) + " " + getText(main_array.get(position).srokinrub, "дни"));
-        holder.sum.setText(Integer.toString(main_array.get(position).suminrub) + " " + getText(main_array.get(position).suminrub, "рубли"));
+        holder.srok.setText(GlobalFunctions.formatToComfort(Integer.toString(main_array.get(position).srokinrub)) + " " + getText(main_array.get(position).srokinrub, "дни"));
+        holder.sum.setText(GlobalFunctions.formatToComfort(Integer.toString(main_array.get(position).suminrub)) + " " + getText(main_array.get(position).suminrub, "рубли"));
         if (!whatUsl.equals("vklads")){
             holder.srokPok.setText("Срок (макс.):");
             holder.sumPok.setText("Сумма (макс.):");
