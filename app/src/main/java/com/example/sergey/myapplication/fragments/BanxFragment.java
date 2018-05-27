@@ -33,9 +33,9 @@ import java.util.Map;
  */
 
 public class BanxFragment extends Fragment {
-    ShimmerRecyclerView recyclerView;
-    List<BankCard> main_array;
-    DatabaseReference reference;
+    private ShimmerRecyclerView recyclerView;
+    private List<BankCard> main_array;
+    private DatabaseReference reference;
 
     public void setTransaction(FragmentTransaction transaction) {
         this.transaction = transaction;

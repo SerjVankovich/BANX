@@ -19,8 +19,9 @@ import com.example.sergey.myapplication.adapters.ResMyAdapter;
  */
 
 public class MyVklads extends Fragment {
-    RecyclerView recyclerView;
-    ResMyAdapter adapter;
+    private RecyclerView recyclerView;
+    private ResMyAdapter adapter;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

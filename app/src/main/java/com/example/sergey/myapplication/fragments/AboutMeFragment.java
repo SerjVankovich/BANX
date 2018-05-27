@@ -16,10 +16,11 @@ import com.vansuita.materialabout.builder.AboutBuilder;
 import com.vansuita.materialabout.views.AboutView;
 
 public class AboutMeFragment extends Fragment {
+    private AboutBuilder builder;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        AboutBuilder builder = AboutBuilder.with(getContext())
+        builder = AboutBuilder.with(getContext())
                 .setAppIcon(R.mipmap.icon_launcher)
                 .setAppName("BANX")
                 .setPhoto(R.drawable.my_portrait)

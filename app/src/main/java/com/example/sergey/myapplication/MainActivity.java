@@ -52,12 +52,12 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements  NavigationView.OnNavigationItemSelectedListener{
 
-    Toolbar toolbar;
-    TextView toolbar_text;
-    Button filter;
+    private Toolbar toolbar;
+    private TextView toolbar_text;
+    private Button filter;
     private String toolBarString;
 
-    DataBaseHelper dbHelper;
+    private DataBaseHelper dbHelper;
     private FragmentVklads fvklads;
     private FragmentCredits fragmentCredits;
     private MyCredits credits;
@@ -66,14 +66,9 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
     private CotirFragment cotirFragment;
     private AboutMeFragment aboutMeFragment;
 
-    NavigationView navigationView;
-    SlidingRootNav slidingBuilder;
-    private AdView mAdView;
+    private NavigationView navigationView;
+    private SlidingRootNav slidingBuilder;
     private Fragment currentFragment;
-
-
-
-
 
 
 
@@ -90,8 +85,6 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
         toolBarString = "BANX";
         vklads = new MyVklads();
         cotirFragment = new CotirFragment();
-        @SuppressLint("ResourceType") LinearLayout menuLayout = findViewById(R.layout.activity);
-
 
         filter = findViewById(R.id.filter);
 
@@ -117,7 +110,32 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
         banxFragment.setTransaction(getSupportFragmentManager().beginTransaction());
 
         if (currentFragment != null) {
-            fragmentTransaction.replace(R.id.container, currentFragment).commit();
+
+            if (currentFragment.getClass() == fragmentCredits.getClass()) {
+                fragmentCredits = new FragmentCredits();
+                fragmentTransaction.replace(R.id.container, fragmentCredits).commit();
+                filter.setVisibility(View.VISIBLE);
+                filter.setEnabled(true);
+                filter.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        buildDialog(fragmentCredits);
+                    }
+                });
+            } else if (currentFragment.getClass() == fvklads.getClass()) {
+                fvklads = new FragmentVklads();
+                fragmentTransaction.replace(R.id.container, fvklads).commit();
+                filter.setVisibility(View.VISIBLE);
+                filter.setEnabled(true);
+                filter.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        buildDialog(fvklads);
+                    }
+                });
+            } else {
+                fragmentTransaction.replace(R.id.container, currentFragment).commit();
+            }
             try {
                 banxFragment = (BanxFragment) currentFragment;
                 banxFragment.setTransaction(getSupportFragmentManager().beginTransaction());
@@ -230,7 +248,7 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
             List<DBCard> resultList = new ArrayList<>();
             for (DBCard card:
                     list) {
-                if (card.perinrub >= Double.parseDouble(fromPercent) && card.perinrub <= Double.parseDouble(toPercent)) {
+                if (card.getPerinrub() >= Double.parseDouble(fromPercent) && card.getPerinrub() <= Double.parseDouble(toPercent)) {
                     resultList.add(card);
                 }
             }
@@ -248,7 +266,7 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
             List<DBCard> resultList = new ArrayList<>();
             for (DBCard card:
                     list) {
-                if (banks.contains(card.bank)) {
+                if (banks.contains(card.getBank())) {
                     resultList.add(card);
                 }
             }
@@ -265,7 +283,7 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
             List<DBCard> resultList = new ArrayList<>();
             for (DBCard card:
                     list) {
-                if (card.suminrub >= Double.parseDouble(fromSum) && card.suminrub <= Double.parseDouble(toSum)) {
+                if (card.getSuminrub() >= Double.parseDouble(fromSum) && card.getSuminrub() <= Double.parseDouble(toSum)) {
                     resultList.add(card);
                 }
             }
@@ -280,7 +298,7 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
             List<DBCard> resultList = new ArrayList<>();
             for (DBCard card:
                     list) {
-                if (card.srokinrub >= Double.parseDouble(fromSrok) && card.srokinrub <= Double.parseDouble(toSrok)) {
+                if (card.getSrokinrub() >= Double.parseDouble(fromSrok) && card.getSrokinrub() <= Double.parseDouble(toSrok)) {
                     resultList.add(card);
                 }
             }
@@ -433,7 +451,7 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
         return list;
 
     }
-    public  void buildDialog(final Getter getter){
+    private  void buildDialog(final Getter getter){
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         View view = (CardView) getLayoutInflater().inflate(R.layout.filter_dialog, null);
 
@@ -449,7 +467,7 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
         HashSet<String> set = new HashSet<>();
         for (DBCard card:
                 getter.getMainArray()) {
-            set.add(card.bank);
+            set.add(card.getBank());
         }
         final ResDialogAdapter adapter = new ResDialogAdapter(set.toArray(new String[set.size()]));
         recyclerView.setAdapter(adapter);

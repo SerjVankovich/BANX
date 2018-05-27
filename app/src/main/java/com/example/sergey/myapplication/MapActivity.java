@@ -75,8 +75,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             for (MyLatLng latLng :
                     main_array) {
                 map.addMarker(new MarkerOptions()
-                        .position(new LatLng(latLng.lat, latLng.lng))
-                        .title(fullBankName + ", " + latLng.adress)
+                        .position(new LatLng(latLng.getLat(), latLng.getLng()))
+                        .title(fullBankName + ", " + latLng.getAdress())
                 );
             }
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(VLADIVOSTOK, 12));

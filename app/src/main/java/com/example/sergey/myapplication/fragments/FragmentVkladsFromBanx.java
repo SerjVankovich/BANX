@@ -29,14 +29,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FragmentVkladsFromBanx extends Fragment {
-    ShimmerRecyclerView recyclerView;
+    private ShimmerRecyclerView recyclerView;
 
-    Context context;
-    ResAdapter adapter;
-    List<DBCard> main_array;
-    DatabaseReference ref;
-    String firstChild;
-    String secondChild;
+    private Context context;
+    private ResAdapter adapter;
+    private List<DBCard> main_array;
+    private DatabaseReference ref;
+    private String firstChild;
+    private String secondChild;
 
     public void setFirstChild(String firstChild) {
         this.firstChild = firstChild;

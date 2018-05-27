@@ -20,7 +20,7 @@ import java.util.List;
  */
 
 public class ResCotAdapter extends RecyclerView.Adapter<ResCotAdapter.Holder> {
-    List<Cotirovka> main_array;
+    private List<Cotirovka> main_array;
 
     public ResCotAdapter(List<Cotirovka> main_array) {
         this.main_array = main_array;

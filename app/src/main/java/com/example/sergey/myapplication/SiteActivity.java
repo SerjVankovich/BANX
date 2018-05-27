@@ -4,6 +4,7 @@ import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -11,9 +12,9 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 public class SiteActivity extends AppCompatActivity {
-    WebView webView;
-    ProgressBar progressBar;
-    String link;
+    private WebView webView;
+    private ProgressBar progressBar;
+    private String link;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +30,17 @@ public class SiteActivity extends AppCompatActivity {
         } else {
             webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
+
+        //Added from another project
+        webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+        webView.getSettings().setBuiltInZoomControls(true);
+        webView.getSettings().setDisplayZoomControls(false);
+        webView.getSettings().setLoadWithOverviewMode(true);
+        webView.getSettings().setUseWideViewPort(true);
+        webView.setHorizontalScrollBarEnabled(true);
+        webView.setVerticalScrollBarEnabled(true);
+        webView.getSettings().setDomStorageEnabled(true);
+        webView.setWebChromeClient(new WebChromeClient());
 
         link = getIntent().getStringExtra("link");
         webView.loadUrl(link);

@@ -32,9 +32,9 @@ import java.util.Objects;
  */
 
 public class CotirFragment extends Fragment {
-    List<Cotirovka> main_array;
-    ShimmerRecyclerView recyclerView;
-    DatabaseReference databaseReference;
+    private List<Cotirovka> main_array;
+    private ShimmerRecyclerView recyclerView;
+    private DatabaseReference databaseReference;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

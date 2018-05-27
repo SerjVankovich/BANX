@@ -21,98 +21,6 @@ import java.util.Map;
  */
 
 public class GlobalFunctions {
-    public static void getData(List<DBCard> main_array, DataSnapshot dataSnapshot, ShimmerRecyclerView recyclerView
-                               ){
-
-        recyclerView.showShimmerAdapter();
-        // This method is called once with the initial value and again
-        // whenever data at this location is updated.
-        GenericTypeIndicator<List<Object>> t = new GenericTypeIndicator<List<Object>>(){};
-        List<Object> value = dataSnapshot.getValue(t);
-
-        List<String> titles = new ArrayList<>();
-        List<Integer> sroks = new ArrayList<>();
-        List<Integer> sums = new ArrayList<>();
-        List<Double> percents = new ArrayList<>();
-        List<String> banks = new ArrayList<>();
-        List<String> links = new ArrayList<>();
-
-        assert value != null;
-        for (Object obj:
-                value) {
-            boolean titleHas = false;
-            boolean sumHas = false;
-            boolean srokHas = false;
-            boolean perHas = false;
-            boolean bankHas = false;
-
-            String title = "";
-            int sum = 0;
-            int srok = 0;
-            double percent = 0;
-            String bank = "";
-            String link = "";
-
-            HashMap<String, String > hashMap = (HashMap<String, String>) obj;
-            for (Map.Entry<String, String> entry:
-                    hashMap.entrySet()) {
-
-                String key = entry.getKey();
-
-
-                switch (key){
-                    case "title":
-                        title = entry.getValue();
-                        Log.d("MyLog", title);
-                        titleHas = true;
-                        break;
-                    case "suminrub":
-                        sum = (int)(double)Double.parseDouble(entry.getValue());
-                        Log.d("MLOG", "" + sum);
-                        sumHas = true;
-                        break;
-                    case "srokinrub":
-                        srok = (int)(double)Double.parseDouble(entry.getValue());
-                        srokHas = true;
-                        break;
-                    case "perinrub":
-                        percent = Double.parseDouble(entry.getValue());
-                        perHas = true;
-                        break;
-                    case "bank":
-                        bank = entry.getValue();
-                        bankHas = true;
-                        break;
-                    case "link":
-                        link = entry.getValue();
-
-
-                }
-
-
-
-
-            }
-            if(titleHas && sumHas && srokHas && perHas && bankHas) {
-                titles.add(title);
-                sroks.add(srok);
-                sums.add(sum);
-                percents.add(percent);
-                banks.add(bank);
-                links.add(link);
-            }
-        }
-        for (int i = 0; i < titles.size(); i++) {
-            try{
-                DBCard card = new DBCard(titles.get(i), percents.get(i), sums.get(i), sroks.get(i), banks.get(i), links.get(i));
-                main_array.add(card);
-            } catch (IndexOutOfBoundsException e) {
-                DBCard card = new DBCard(titles.get(i), 0, 0, 0, null, null);
-            }
-
-        }
-
-    }
     public static void loadMore(List<DBCard> main_array, List<DBCard> showArray, ResAdapter adapter, int beginSlice, int endSlice){
 
         for (int i = beginSlice; i < endSlice; i++) {
@@ -125,7 +33,7 @@ public class GlobalFunctions {
 
     }
     public static void findImage(ImageView imageView, int position, List<DBCard> main_array, int width, int height){
-        String bank = main_array.get(position).bank;
+        String bank = main_array.get(position).getBank();
         switch (bank){
             case "alfabank":
                 Picasso.get().load(R.drawable.alfabank).resize(width, height).centerCrop().centerCrop().into(imageView);

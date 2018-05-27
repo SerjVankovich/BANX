@@ -52,11 +52,11 @@ import info.hoang8f.widget.FButton;
 
 
 public class ResAdapter extends RecyclerView.Adapter<ResAdapter.ViewHolder> {
-    List<DBCard> main_array;
-    Context context;
-    String table;
+    private List<DBCard> main_array;
+    private Context context;
+    private String table;
     private final ViewBinderHelper vhelper;
-    String whatUsl;
+    private String whatUsl;
 
     public ResAdapter(Context context, List<DBCard> main_array, String table, String whatUsl) {
         this.context = context;
@@ -119,17 +119,17 @@ public class ResAdapter extends RecyclerView.Adapter<ResAdapter.ViewHolder> {
                 final EditText sum = view_dialog.findViewById(R.id.sum);
                 final EditText srok = view_dialog.findViewById(R.id.srok);
                 if (whatUsl.equals("vklads")){
-                    sum.setHint("Сумма (мин.: " + GlobalFunctions.formatToComfort(String.valueOf(main_array.get(position).suminrub)) + ")");
-                    srok.setHint("Срок (мин.: " + GlobalFunctions.formatToComfort(String.valueOf(main_array.get(position).srokinrub)) + ")");
+                    sum.setHint("Сумма (мин.: " + GlobalFunctions.formatToComfort(String.valueOf(main_array.get(position).getSuminrub())) + ")");
+                    srok.setHint("Срок (мин.: " + GlobalFunctions.formatToComfort(String.valueOf(main_array.get(position).getSrokinrub())) + ")");
                 } else {
-                    sum.setHint("Сумма (макс.: " + GlobalFunctions.formatToComfort(String.valueOf(main_array.get(position).suminrub)) + ")");
-                    srok.setHint("Срок (макс.: " + GlobalFunctions.formatToComfort(String.valueOf(main_array.get(position).srokinrub)) + ")");
+                    sum.setHint("Сумма (макс.: " + GlobalFunctions.formatToComfort(String.valueOf(main_array.get(position).getSuminrub())) + ")");
+                    srok.setHint("Срок (макс.: " + GlobalFunctions.formatToComfort(String.valueOf(main_array.get(position).getSrokinrub())) + ")");
                 }
 
 
-                final String vkladName = main_array.get(position).title;
-                final String bankName = main_array.get(position).bank;
-                final Double percents = main_array.get(position).perinrub;
+                final String vkladName = main_array.get(position).getTitle();
+                final String bankName = main_array.get(position).getBank();
+                final Double percents = main_array.get(position).getPerinrub();
                 operation.setText(vkladName);
                 perText.setText(percents.toString() + "%");
                 GlobalFunctions.findImage(icon, position, main_array, 100, 100);
@@ -150,8 +150,8 @@ public class ResAdapter extends RecyclerView.Adapter<ResAdapter.ViewHolder> {
                             int summa =  Integer.parseInt(sum.getText().toString());
                             int srokInt = Integer.parseInt(srok.getText().toString());
                             if (whatUsl.equals("vklads")){
-                                if (summa >= main_array.get(position).suminrub){
-                                    if (srokInt >= main_array.get(position).srokinrub){
+                                if (summa >= main_array.get(position).getSuminrub()){
+                                    if (srokInt >= main_array.get(position).getSrokinrub()){
                                         writeToDB(vkladName, percents, summa, srokInt, bankName, dialog);
                                     } else{
                                         Toast.makeText(context, "Извините, указан срок, меньше минимального", Toast.LENGTH_SHORT).show();
@@ -160,8 +160,8 @@ public class ResAdapter extends RecyclerView.Adapter<ResAdapter.ViewHolder> {
                                     Toast.makeText(context, "Извините, указана сумма, меньше максимальной", Toast.LENGTH_SHORT).show();
                                 }
                             } else {
-                                if (summa <= main_array.get(position).suminrub){
-                                    if (srokInt <= main_array.get(position).srokinrub){
+                                if (summa <= main_array.get(position).getSuminrub()){
+                                    if (srokInt <= main_array.get(position).getSrokinrub()){
                                         writeToDB(vkladName, percents, summa, srokInt, bankName, dialog);
                                     } else{
                                         Toast.makeText(context, "Извините, указан срок, больше минимального", Toast.LENGTH_SHORT).show();
@@ -184,7 +184,7 @@ public class ResAdapter extends RecyclerView.Adapter<ResAdapter.ViewHolder> {
             public void onClick(View v) {
                 int position = vh.getAdapterPosition();
                 Intent intent = new Intent(context, SiteActivity.class);
-                intent.putExtra("link", main_array.get(position).link);
+                intent.putExtra("link", main_array.get(position).getLink());
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }
@@ -197,10 +197,10 @@ public class ResAdapter extends RecyclerView.Adapter<ResAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
 
-        holder.title.setText(main_array.get(position).title);
-        holder.percents.setText(Double.toString(main_array.get(position).perinrub) + "%");
-        holder.srok.setText(GlobalFunctions.formatToComfort(Integer.toString(main_array.get(position).srokinrub)) + " " + getText(main_array.get(position).srokinrub, "дни"));
-        holder.sum.setText(GlobalFunctions.formatToComfort(Integer.toString(main_array.get(position).suminrub)) + " " + getText(main_array.get(position).suminrub, "рубли"));
+        holder.title.setText(main_array.get(position).getTitle());
+        holder.percents.setText(Double.toString(main_array.get(position).getPerinrub()) + "%");
+        holder.srok.setText(GlobalFunctions.formatToComfort(Integer.toString(main_array.get(position).getSrokinrub())) + " " + getText(main_array.get(position).getSrokinrub(), "дни"));
+        holder.sum.setText(GlobalFunctions.formatToComfort(Integer.toString(main_array.get(position).getSuminrub())) + " " + getText(main_array.get(position).getSuminrub(), "рубли"));
         if (!whatUsl.equals("vklads")){
             holder.srokPok.setText("Срок (макс.):");
             holder.sumPok.setText("Сумма (макс.):");

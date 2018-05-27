@@ -35,8 +35,8 @@ import java.util.Map;
  */
 
 public class MyCredits extends Fragment {
-    ShimmerRecyclerView recyclerView;
-    ResMyAdapter adapter;
+    private ShimmerRecyclerView recyclerView;
+    private ResMyAdapter adapter;
 
     @Nullable
     @Override
@@ -53,13 +53,4 @@ public class MyCredits extends Fragment {
 
         return view;
     }
-
-
-
-
-    // public List<DBCard> getMy_cerdits(){
-//     DataBaseHelper helper = new DataBaseHelper(getContext());
-//     SQLiteDatabase db = helper.getReadableDatabase();
-//     Cursor cursor = db.query()
-// }
 }

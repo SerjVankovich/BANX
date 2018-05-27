@@ -36,9 +36,9 @@ import java.util.List;
 
 public class ResBankAdapter extends RecyclerView.Adapter<ResBankAdapter.ViewHolder> {
     private List<BankCard> main_array;
-    ViewBinderHelper vhelper;
-    FragmentTransaction transaction;
-    Context context;
+    private ViewBinderHelper vhelper;
+    private FragmentTransaction transaction;
+    private Context context;
 
     public ResBankAdapter(List<BankCard> main_array, FragmentTransaction transaction, Context context) {
         this.main_array = main_array;
@@ -60,7 +60,7 @@ public class ResBankAdapter extends RecyclerView.Adapter<ResBankAdapter.ViewHold
                 FragmentVkladsFromBanx fvklads = new FragmentVkladsFromBanx();
                 fvklads.setFirstChild("all_vklads");
                 fvklads.setSecondChild("vklads");
-                fvklads.setBankName(main_array.get(position).bank);
+                fvklads.setBankName(main_array.get(position).getBank());
                 transaction.addToBackStack(null);
                 transaction.setCustomAnimations(R.animator.fragment_left_anim, R.animator.fragment_right_anim, R.animator.fragment_left_anim, R.animator.fragment_right_anim);
                 transaction.replace(R.id.container, fvklads).commit();
@@ -73,7 +73,7 @@ public class ResBankAdapter extends RecyclerView.Adapter<ResBankAdapter.ViewHold
                 FragmentVkladsFromBanx fvklads = new FragmentVkladsFromBanx();
                 fvklads.setFirstChild("all_kredits");
                 fvklads.setSecondChild("kredits");
-                fvklads.setBankName(main_array.get(position).bank);
+                fvklads.setBankName(main_array.get(position).getBank());
                 transaction.addToBackStack(null);
                 transaction.setCustomAnimations(R.animator.fragment_left_anim, R.animator.fragment_right_anim, R.animator.fragment_left_anim, R.animator.fragment_right_anim);
                 transaction.replace(R.id.container, fvklads).commit();
@@ -84,7 +84,7 @@ public class ResBankAdapter extends RecyclerView.Adapter<ResBankAdapter.ViewHold
             public void onClick(View v) {
                 int position = holder.getAdapterPosition();
                 Intent intent = new Intent(context, SiteActivity.class);
-                intent.putExtra("link", translateIntoURL(main_array.get(position).bank));
+                intent.putExtra("link", translateIntoURL(main_array.get(position).getBank()));
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
 
@@ -95,7 +95,7 @@ public class ResBankAdapter extends RecyclerView.Adapter<ResBankAdapter.ViewHold
             public void onClick(View v) {
                 int position = holder.getAdapterPosition();
                 Intent intent = new Intent(context, MapActivity.class);
-                intent.putExtra("bankName", main_array.get(position).bank);
+                intent.putExtra("bankName", main_array.get(position).getBank());
                 context.startActivity(intent);
             }
         });
@@ -105,8 +105,8 @@ public class ResBankAdapter extends RecyclerView.Adapter<ResBankAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.creditsNum.setText(main_array.get(position).len_cred);
-        holder.vkladsNum.setText(main_array.get(position).len_vklads);
+        holder.creditsNum.setText(main_array.get(position).getLen_cred());
+        holder.vkladsNum.setText(main_array.get(position).getLen_vklads());
         findImage(holder.bankName, holder.icon, main_array, position, 120, 120);
         vhelper.bind(holder.bankCard, main_array.get(position).toString());
         vhelper.setOpenOnlyOne(true);
@@ -118,7 +118,7 @@ public class ResBankAdapter extends RecyclerView.Adapter<ResBankAdapter.ViewHold
         return main_array.size();
     }
     public void findImage(TextView bankName, ImageView imageView, List<BankCard> list, int position, int width, int height){
-        String bank = list.get(position).bank;
+        String bank = list.get(position).getBank();
         switch (bank){
             case "alfabank":
                 Picasso.get().load(R.drawable.alfabank).resize(width, height).centerCrop().centerCrop().into(imageView);

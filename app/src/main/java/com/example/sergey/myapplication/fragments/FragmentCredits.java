@@ -1,12 +1,9 @@
 package com.example.sergey.myapplication.fragments;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +11,8 @@ import android.view.ViewGroup;
 import com.cooltechworks.views.shimmer.ShimmerRecyclerView;
 import com.example.sergey.myapplication.DataBase.DBCard;
 import com.example.sergey.myapplication.DataBase.DataBaseHelper;
-import com.example.sergey.myapplication.GlobalFunctions;
-import com.example.sergey.myapplication.LoadingThread;
 import com.example.sergey.myapplication.R;
-import com.example.sergey.myapplication.adapters.MyScrollListener;
 import com.example.sergey.myapplication.adapters.ResAdapter;
-import com.example.sergey.myapplication.comparaters.PercentVkladsCompatrator;
 import com.example.sergey.myapplication.comparaters.PercentsCreditsComparator;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,21 +22,18 @@ import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by sergey on 10.02.2018.
  */
 
 public class FragmentCredits extends Fragment implements Getter {
-    ShimmerRecyclerView recyclerView;
-    ResAdapter adapter;
-    List<DBCard> main_array;
-    PercentsCreditsComparator comparator;
-    DatabaseReference ref;
+    private ShimmerRecyclerView recyclerView;
+    private ResAdapter adapter;
+    private List<DBCard> main_array;
+    private PercentsCreditsComparator comparator;
+    private DatabaseReference ref;
     @Nullable
     @Override
 
@@ -100,42 +90,4 @@ public class FragmentCredits extends Fragment implements Getter {
     public ShimmerRecyclerView getRecyclerView() {
         return recyclerView;
     }
- /*   public void getMainArray(){
-        main_array = new ArrayList<>();
-        DatabaseReference myBase = FirebaseDatabase.getInstance().getReference();
-
-
-
-        myBase.child("all_kredits").child("kredits").addValueEventListener(new ValueEventListener() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                GlobalFunctions.getData(dataSnapshot, recyclerView, main_array);
-                updateUI(dataSnapshot);
-
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w("MyLog", "Failed to read value.", error.toException());
-            }
-        });
-
-    }
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void updateUI(DataSnapshot snapshot){
-        comparator = new PercentsCreditsComparator();
-        Collections.sort(main_array, comparator);
-        List<DBCard> showArray = new ArrayList<>();
-        adapter = new ResAdapter(getContext(), showArray, DataBaseHelper.TABLE_CREDITS);
-        GlobalFunctions.loadMore(main_array, showArray, adapter, 0, 15);
-
-        recyclerView.setAdapter(adapter);
-        recyclerView.addOnScrollListener(new MyScrollListener(recyclerView, main_array, adapter, showArray));
-
-        recyclerView.hideShimmerAdapter();
-    } */
-
 }

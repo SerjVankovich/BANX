@@ -24,8 +24,8 @@ import java.util.List;
  */
 
 public class ResDialogAdapter extends RecyclerView.Adapter<ResDialogAdapter.MyHolder> {
-    String[] main_array;
-    List<CheckBox> checkBoxes;
+    private String[] main_array;
+    private List<CheckBox> checkBoxes;
 
     public List<CheckBox> getCheckBoxes() {
         return checkBoxes;

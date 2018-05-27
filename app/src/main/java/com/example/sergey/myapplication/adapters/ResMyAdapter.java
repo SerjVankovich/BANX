@@ -29,10 +29,10 @@ import java.util.List;
  */
 
 public class ResMyAdapter extends RecyclerView.Adapter<ResMyAdapter.ViewHolder> {
-    List<DBCard> main_array;
-    Context context;
-    String table;
-    ViewBinderHelper helper;
+    private List<DBCard> main_array;
+    private Context context;
+    private String table;
+    private ViewBinderHelper helper;
 
     public ResMyAdapter(Context context, String table) {
         this.context = context;
@@ -58,7 +58,7 @@ public class ResMyAdapter extends RecyclerView.Adapter<ResMyAdapter.ViewHolder> 
             int absoluteID = cursor.getColumnIndex(DataBaseHelper.KEY_ID);
             do {
                 DBCard card = new DBCard(cursor.getString(titleId), cursor.getDouble(perId), cursor.getInt(sumId), cursor.getInt(srokId), cursor.getString(bankId), null);
-                card.absoluteID = cursor.getInt(absoluteID);
+                card.setAbsoluteID(cursor.getInt(absoluteID));
                 list.add(card);
             } while (cursor.moveToNext());
         }
@@ -108,10 +108,10 @@ public class ResMyAdapter extends RecyclerView.Adapter<ResMyAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.title.setText(main_array.get(position).title);
-        holder.percents.setText(Double.toString(main_array.get(position).perinrub) + "%");
-        holder.srok.setText(GlobalFunctions.formatToComfort(Integer.toString(main_array.get(position).srokinrub)));
-        holder.sum.setText(GlobalFunctions.formatToComfort(Integer.toString(main_array.get(position).suminrub)));
+        holder.title.setText(main_array.get(position).getTitle());
+        holder.percents.setText(Double.toString(main_array.get(position).getPerinrub()) + "%");
+        holder.srok.setText(GlobalFunctions.formatToComfort(Integer.toString(main_array.get(position).getSrokinrub())));
+        holder.sum.setText(GlobalFunctions.formatToComfort(Integer.toString(main_array.get(position).getSuminrub())));
         GlobalFunctions.findImage(holder.icon, position, main_array, 120, 120);
         helper.bind(holder.cardView, main_array.get(position).toString());
         helper.setOpenOnlyOne(true);
@@ -145,7 +145,7 @@ public class ResMyAdapter extends RecyclerView.Adapter<ResMyAdapter.ViewHolder> 
     public void deleteCardView(int position){
         DataBaseHelper helper = new DataBaseHelper(context);
         SQLiteDatabase database = helper.getWritableDatabase();
-        database.delete(table, DataBaseHelper.KEY_ID  + "='" + Integer.toString(main_array.get(position).absoluteID) + "'", null);
+        database.delete(table, DataBaseHelper.KEY_ID  + "='" + Integer.toString(main_array.get(position).getAbsoluteID()) + "'", null);
         main_array.remove(position);
         notifyItemRemoved(position);
     }

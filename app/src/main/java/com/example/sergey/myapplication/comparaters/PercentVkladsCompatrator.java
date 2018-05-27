@@ -15,8 +15,8 @@ import java.util.function.ToLongFunction;
 public class PercentVkladsCompatrator implements Comparator<DBCard> {
     @Override
     public int compare(DBCard o1, DBCard o2) {
-        double per1 = o1.perinrub;
-        double per2 = o2.perinrub;
+        double per1 = o1.getPerinrub();
+        double per2 = o2.getPerinrub();
 
         return Double.compare(per2, per1);
 
